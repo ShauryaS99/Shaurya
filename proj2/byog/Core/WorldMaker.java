@@ -20,7 +20,7 @@ public class WorldMaker {
         int yPath = yPos;
         int wall1 = xPos - 1;
         int wall2 = xPos + 1;
-        int s = RANDOM.nextInt(17) + 3;
+        int s = RANDOM.nextInt(HEIGHT - yPath);
         for (int i = 0; i < s; i += 1) {
             world[xPath][yPath] = Tileset.FLOOR;
             world[wall1][yPath] = Tileset.WALL;
@@ -37,7 +37,7 @@ public class WorldMaker {
         int yPath = yPos;
         int wall1 = yPos - 1;
         int wall2 = yPos + 1;
-        int s = RANDOM.nextInt(17) + 3;
+        int s = RANDOM.nextInt(WIDTH - xPath);
         for (int i = 0; i < s; i += 1) {
             world[xPath][yPath] = Tileset.FLOOR;
             world[xPath][wall1] = Tileset.WALL;
@@ -47,7 +47,7 @@ public class WorldMaker {
         feature += 1;
     }
 
-    // makes room YA NEED TO FIGURE OUT HOW TO WORK WITH OPENINGS AND SHIT AND HOW U HAVE WALLS FILLED WITH FLOOR
+    // makes room YA NEED TO FIGURE OUT HOW TO WORK WITH OPENINGS
     public static void addRoom(TETile[][] world, int xPos, int yPos) {
         int botLX = xPos;
         int botLY = yPos;
@@ -60,6 +60,23 @@ public class WorldMaker {
                     world[botLX + i][botLY + j] = Tileset.WALL;
                 }
             }
+        }
+
+        //sets coordinates for door
+        int door = RANDOM.nextInt(2);
+        int doorY = RANDOM.nextInt(length) + botLY - 1;
+        int doorX = RANDOM.nextInt(wide) + botLX - 1;
+
+        //adds door to outer layer and connects a hallway
+        switch (door) {
+            case 0:
+                world[wide][doorY] = Tileset.GRASS;
+                WorldMaker.addHoriHall(world, wide + 1, doorY);
+            case 1:
+                world[doorX][length] = Tileset.GRASS;
+                WorldMaker.addVertHall(world, doorX, length + 1 );
+            case 2:
+                world[wide][length] = Tileset.WALL;
         }
         feature += 1;
     }
@@ -78,7 +95,7 @@ public class WorldMaker {
 
         public static void FillWithRandomFeatures (TETile[][]world){
 
-            while (feature <= 50) {
+            while (feature <= 30) {
                 RandomFeature(world);
             }
         }
