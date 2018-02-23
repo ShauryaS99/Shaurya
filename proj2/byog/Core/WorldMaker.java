@@ -51,8 +51,8 @@ public class WorldMaker {
     public static void addRoom(TETile[][] world, int xPos, int yPos) {
         int botLX = xPos;
         int botLY = yPos;
-        int wide = RANDOM.nextInt(8) + 2;
-        int length = RANDOM.nextInt(8) + 2;
+        int wide = RANDOM.nextInt(7) + 3;
+        int length = RANDOM.nextInt(7) + 3;
         for (int i = 0; i <= wide; i++) {
             for (int j = 0; j <= length; j++) {
                 world[botLX + i][botLY + j] = Tileset.GRASS;
@@ -62,9 +62,30 @@ public class WorldMaker {
             }
         }
 
+        int doornum = RANDOM.nextInt(3) + 1; //creates random # of doors from 1-3
+        while (doornum >= 0) {
+            int doorposx = RANDOM.nextInt(wide - 2) + botLX + 1; //sets random x position for opening that doesn't include corners
+            int doorposy = RANDOM.nextInt(length - 2) + botLY + 1; //sets random x position for opening that doesn't include corners
+            int randpos = RANDOM.nextInt(3);
+            switch(randpos) { //assigns doors to onoe of the 4 sides of the room
+                case 0:
+                    world[doorposx][botLY] = Tileset.FLOWER;
+                case 1:
+                    world[doorposx][botLY + length] = Tileset.FLOWER;
+                case 2:
+                    world[doorposy][botLX] = Tileset.FLOWER;
+                case 3:
+                    world[doorposy][botLX + wide] = Tileset.FLOWER;
+
+            }
+            doornum -= 1;
+        }
+
+
+        /**
         //sets coordinates for door
         int door = RANDOM.nextInt(2);
-        int doorY = RANDOM.nextInt(length) + botLY - 1;
+        int doorY = RANDOM.nextInt(length) + botLY - 1; //having -1 might give us an error- purpose of having -1?
         int doorX = RANDOM.nextInt(wide) + botLX - 1;
 
         //adds door to outer layer and connects a hallway
@@ -77,7 +98,7 @@ public class WorldMaker {
                 WorldMaker.addVertHall(world, doorX, length + 1 );
             case 2:
                 world[wide][length] = Tileset.WALL;
-        }
+        }*/
         feature += 1;
     }
 
