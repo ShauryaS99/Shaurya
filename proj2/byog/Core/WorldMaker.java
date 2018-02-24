@@ -21,16 +21,26 @@ public class WorldMaker {
         int yPath = yPos; //fixed array out of bounds
         int wall1 = xPos;
         int wall2 = xPos + 2;
-        int s = RANDOM.nextInt(HEIGHT - yPath) % 15;
-        for (int i = 0; i < s; i += 1) {
-            world[xPath][yPath] = Tileset.SAND;
-            world[wall1][yPath] = Tileset.WALL;
-            world[wall2][yPath] = Tileset.WALL;
-            yPath += 1;
+        int s = WorldMaker.checkhallsize(HEIGHT, yPath);
+        if (WorldMaker.isEmpty(world, xPos, yPos, xPos + 2, yPos + s)) {
+            for (int i = 0; i < s; i += 1) {
+                world[xPath][yPath] = Tileset.SAND;
+                world[wall1][yPath] = Tileset.WALL;
+                world[wall2][yPath] = Tileset.WALL;
+                yPath += 1;
+            }
+            if (!(s == 0)) {
+                world[xPath][yPath] = Tileset.MOUNTAIN; //adds moutain
+                feature += 1;
+            }
         }
-        world[xPath][yPath + s] = Tileset.MOUNTAIN; //adds flower
-        feature += 1;
+    }
 
+    public static int checkhallsize(int DIMENSION, int path) {
+        if ((DIMENSION -  path - 4) <= 0) {
+            return 0;
+        }
+        return (RANDOM.nextInt(DIMENSION - path - 4)) % 10 + 4; //size: 5 - 15 makes sure there is space for hall
     }
 
     // makes horizontal hall
@@ -39,43 +49,58 @@ public class WorldMaker {
         int yPath = yPos + 1;
         int wall1 = yPos;
         int wall2 = yPos + 2;
-        int s = RANDOM.nextInt(WIDTH - xPath) % 15 ;
-        for (int i = 0; i < s; i += 1) {
-            world[xPath][yPath] = Tileset.SAND;
-            world[xPath][wall1] = Tileset.WALL;
-            world[xPath][wall2] = Tileset.WALL;
-            xPath += 1;
+        int s = WorldMaker.checkhallsize(WIDTH, xPath);
+        if (isEmpty(world, xPos, yPos, xPos + s, yPos + 2)) {
+            for (int i = 0; i < s; i += 1) {
+                world[xPath][yPath] = Tileset.SAND;
+                world[xPath][wall1] = Tileset.WALL;
+                world[xPath][wall2] = Tileset.WALL;
+                xPath += 1;
+            }
+            if (!(s == 0)) {
+                world[xPath][yPath] = Tileset.MOUNTAIN; //adds mountain
+                feature += 1;
+            }
         }
-        world[xPath + s][yPath] = Tileset.MOUNTAIN; //adds flower
-        feature += 1;
+    }
+
+    public static int checkroomsize(int DIMENSION,int start) {
+        if (DIMENSION -  start - 3 <= 0) {
+            return 0;
+        }
+        return (RANDOM.nextInt(DIMENSION- start - 3)) % 10 + 3; //size: 4 - 10 makes sure there is space for room
     }
 
     // makes room YA NEED TO FIGURE OUT HOW TO WORK WITH OPENINGS --> WE DID!!!!
     public static void addRoom(TETile[][] world, int xPos, int yPos) {
         int botLX = xPos;
         int botLY = yPos;
-        int wide = RANDOM.nextInt(7) + 3;
-        int length = RANDOM.nextInt(7) + 3;
-        for (int i = 0; i <= wide; i++) {
-            for (int j = 0; j <= length; j++) {
-                world[botLX + i][botLY + j] = Tileset.GRASS;
-                if (i == 0 || j == 0 || i == wide || j == length) {
-                    world[botLX + i][botLY + j] = Tileset.WALL;
+        int wide = WorldMaker.checkroomsize(WIDTH, botLX);
+        int length = WorldMaker.checkroomsize(HEIGHT, botLY);
+        if (!(wide == 0 || length == 0)) { //check if there is space in isEmpty for phase 2
+            if (isEmpty(world, xPos, yPos, xPos + wide, yPos + length)) {
+                for (int i = 0; i <= wide; i++) {
+                    for (int j = 0; j <= length; j++) {
+                        world[botLX + i][botLY + j] = Tileset.GRASS;
+                        if (i == 0 || j == 0 || i == wide || j == length) {
+                            world[botLX + i][botLY + j] = Tileset.WALL;
+                        }
+                    }
                 }
+                WorldMaker.flower(world, botLX, botLY, wide, length);
+                feature += 1;
+
             }
         }
-
-        WorldMaker.flower(world, botLX, botLY, wide, length);
-        feature += 1;
     }
 
     public static void flower(TETile[][] world, int botLX, int botLY, int wide, int length) { //randomly adds flower to room
-        int doornum = RANDOM.nextInt(2) + 1; //creates random # of dooors from 1-3
+        int doornum = RANDOM.nextInt(2) + 1; //creates random # of dooors from 1-2
         while (doornum >= 1) {
             int doorposx = RANDOM.nextInt(wide - 2) + botLX + 1; //sets random x position for opening that doesn't include corners
             int doorposy = RANDOM.nextInt(length - 2) + botLY + 1; //sets random x position for opening that doesn't include corners
             int randpos = RANDOM.nextInt(2);
-            switch(randpos) { //assigns doors to onoe of the 4 sides of the room
+            switch(randpos) { //assigns doors to one of the 2 sides of the room
                 case 0:
                     world[doorposx][botLY + length] = Tileset.FLOWER;
                     break;
@@ -90,8 +115,8 @@ public class WorldMaker {
     }
 
     public static void halltoroom(TETile[][] world) {
-        for (int x = 0; x < WIDTH; x++) {
-            for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 1; x < WIDTH - 1; x++) {
+            for (int y = 1; y < HEIGHT - 1; y++) {
                 if (world[x][y].equals(Tileset.FLOWER)) { //checks for door
                     if (world[x+1][y].equals(Tileset.WALL) || world[x-1][y].equals(Tileset.WALL)) { //checks if we need vert hall
                         WorldMaker.addVertHall(world, x - 1, y + 1);
@@ -132,7 +157,7 @@ public class WorldMaker {
 
         public static void FillWithRandomFeatures (TETile[][]world){
 
-            while (feature <= 30) {
+            while (feature <= 40) {
                 RandomFeature(world);
             }
         }
@@ -140,16 +165,22 @@ public class WorldMaker {
 
         //}
         public static void Overlap(TETile[][] world, int xpos, int ypos) {
-            if (isEmpty(world, xpos, ypos)) {
+            //if (isEmpty(world, xpos, ypos)) {
+
+            //}
+        }
+        public static boolean isEmpty(TETile[][] world, int xintial, int yintial, int xfinal, int yfinal) {
+            for (int x = xintial; x <= xfinal; x++) {
+                for (int y = yintial; y <= yfinal; y++) {
+                    if (!(world[x][y].equals(Tileset.NOTHING))) {
+                        return false;
+                    }
+
+                }
 
             }
+            return true;
         }
-        public static boolean isEmpty(TETile[][] world, int xpos, int ypos) {
-            if (world[xpos][ypos].equals(Tileset.NOTHING)) {
-                return true;
-            }
-            return false;
-    }
 
         public static void main(String[] args){
             // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
