@@ -192,25 +192,25 @@ public class WorldMaker {
                 if (world[x][y].equals(Tileset.MOUNTAIN)) {
                     if (x == WIDTH - 1 || y == HEIGHT - 1) {
                         world[x][y] = Tileset.WALL;
-                    } //checks sand on all sides
-                    if (world[x][y - 1].equals(Tileset.SAND)) {
-                        if (world[x][y + 1].equals(Tileset.WALL)) {//vert halls
-                            world[x][y + 1] = Tileset.FLOWER;
-                            world[x][y] = Tileset.SAND;
+                    } else {//check if you need to change if statements to else if statments!!
+                        if (world[x][y - 1].equals(Tileset.SAND)) {
+                            if (world[x][y + 1].equals(Tileset.WALL)) {//vert halls
+                                world[x][y + 1] = Tileset.FLOWER;
+                                world[x][y] = Tileset.SAND;
+                            } else if (world[x][y + 1].equals(Tileset.SAND)) { //
+                                world[x][y] = Tileset.SAND;
+                            }
+                        } else if (world[x - 1][y].equals(Tileset.SAND)) {
+                            if (world[x + 1][y].equals(Tileset.WALL)) { //horiz halls
+                                world[x + 1][y] = Tileset.FLOWER;
+                                world[x][y] = Tileset.SAND;
+                            } else if (world[x + 1][y].equals(Tileset.SAND)) {
+                                world[x][y] = Tileset.SAND;
+                            }
                         }
-                        else if (world[x][y + 1].equals(Tileset.SAND)) { //
-                            world[x][y] = Tileset.SAND;
+                        if (world[x][y + 1].equals(Tileset.NOTHING) || world[x + 1][y].equals(Tileset.NOTHING)) {
+                            world[x][y] = Tileset.WALL;
                         }
-                    } else if (world[x - 1][y].equals(Tileset.SAND)) {
-                        if (world[x + 1][y].equals(Tileset.WALL)) { //horiz halls
-                            world[x + 1][y] = Tileset.FLOWER;
-                            world[x][y] = Tileset.SAND;
-                        }
-                        else if (world[x + 1][y].equals(Tileset.SAND)) {
-                            world[x][y] = Tileset.SAND;
-                        }
-                    } if (world[x][y + 1].equals(Tileset.NOTHING) || world[x + 1][y].equals(Tileset.NOTHING)) {
-                        world[x][y] = Tileset.WALL;
                     }
                 }
             }
