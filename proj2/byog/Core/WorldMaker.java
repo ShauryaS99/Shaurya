@@ -7,14 +7,12 @@ import java.util.Random;
 
 public class WorldMaker {
 
-    private static final int WIDTH = 70;
+    private static final int WIDTH = 100;
     private static final int HEIGHT = 50;
     //private static int xPos = 0;
     //private static int yPos = 0;
-    private static final Random RANDOM = new Random(23);
+    protected static Random RANDOM = new Random(69);
     private static int feature = 0;
-    private static int option = 0;
-
 
     //makes vertical hall *GET MOUNTAINS TO OVERLAP
     public static void addVert(TETile[][] world, int xPos, int yPos) {
@@ -23,7 +21,7 @@ public class WorldMaker {
         int wall1 = xPos;
         int wall2 = xPos + 2;
         int s = WorldMaker.checkhallsize(HEIGHT, yPath);
-        if (WorldMaker.isEmpty(world, xPos, yPos, xPos + 1, yPos + s - 1)) {
+        if (WorldMaker.isEmpty(world, xPos, yPos, xPos + 2, yPos + s)) {
             for (int i = 0; i < s; i += 1) {
                 world[xPath][yPath] = Tileset.SAND;
                 world[wall1][yPath] = Tileset.WALL;
@@ -53,7 +51,7 @@ public class WorldMaker {
         int wall1 = yPos;
         int wall2 = yPos + 2;
         int s = WorldMaker.checkhallsize(WIDTH, xPath);
-        if (isEmpty(world, xPos, yPos, xPos + s - 1, yPos + 1)) {
+        if (isEmpty(world, xPos, yPos, xPos + s, yPos + 2)) {
             for (int i = 0; i < s; i += 1) {
                 world[xPath][yPath] = Tileset.SAND;
                 world[xPath][wall1] = Tileset.WALL;
@@ -103,16 +101,17 @@ public class WorldMaker {
 
     public static void flower(TETile[][] world, int botLX, int botLY, int wide, int length) {
         //randomly adds flower to room
-        int doornum = RANDOM.nextInt(2) + 1; //creates random # of dooors from 1-2
+        int doornum = RANDOM.nextInt(1) + 2; //creates random # of dooors from 2
         while (doornum >= 1) {
             int doorposx = RANDOM.nextInt(wide - 2) + botLX + 1;
             //sets random x position for opening that doesn't include corners
             int doorposy = RANDOM.nextInt(length - 2) + botLY + 1;
             //sets random x position for opening that doesn't include corners
             int randpos = RANDOM.nextInt(2);
-            switch (randpos) { //assigns doors to one of the 2 sides of the room
+            switch (0) { //assigns doors to one of the 2 sides of the room
                 case 0:
                     world[doorposx][botLY + length] = Tileset.FLOWER;
+                    world[botLX + wide][doorposy] = Tileset.FLOWER;
                     break;
                 case 1:
                     world[botLX + wide][doorposy] = Tileset.FLOWER;
@@ -187,10 +186,58 @@ public class WorldMaker {
         }
     }
 
+    public static void checkmountain(TETile[][] world) {
+        for (int x = 1; x < WIDTH; x++) {
+            for (int y = 1; y < HEIGHT ; y++) {
+                if (world[x][y].equals(Tileset.MOUNTAIN)) {
+                    if (x == WIDTH - 1 || y == HEIGHT - 1) {
+                        world[x][y] = Tileset.WALL;
+                    } //checks sand on all sides
+                    if (world[x][y - 1].equals(Tileset.SAND)) {
+                        if (world[x][y + 1].equals(Tileset.WALL)) {//vert halls
+                            world[x][y + 1] = Tileset.FLOWER;
+                            world[x][y] = Tileset.SAND;
+                        }
+                        else if (world[x][y + 1].equals(Tileset.SAND)) { //
+                            world[x][y] = Tileset.SAND;
+                        }
+                    } else if (world[x - 1][y].equals(Tileset.SAND)) {
+                        if (world[x + 1][y].equals(Tileset.WALL)) { //horiz halls
+                            world[x + 1][y] = Tileset.FLOWER;
+                            world[x][y] = Tileset.SAND;
+                        }
+                        else if (world[x + 1][y].equals(Tileset.SAND)) {
+                            world[x][y] = Tileset.SAND;
+                        }
+                    } if (world[x][y + 1].equals(Tileset.NOTHING) || world[x + 1][y].equals(Tileset.NOTHING)) {
+                        world[x][y] = Tileset.WALL;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void checkflower(TETile[][]world) {
+        for (int x = 1; x < WIDTH; x++) {
+            for (int y = 1; y < HEIGHT; y++) {
+                if (world[x][y].equals(Tileset.FLOWER)) {
+                    if (x == WIDTH - 1 || y == HEIGHT - 1) {
+                        world[x][y] = Tileset.WALL;
+                    } //checks sand on all sides
+                    else if (!(world[x + 1][y].equals(Tileset.SAND) || world[x][y + 1].equals(Tileset.SAND)
+                            || world[x - 1][y].equals(Tileset.SAND) || world[x][y - 1].equals(Tileset.SAND))
+                            || (world[x][y + 1].equals(Tileset.NOTHING))) {
+                        world[x][y] = Tileset.WALL;
+                    }
+                }
+            }
+        }
+    }
+
     // no more randy shit everywhere
     public static void addRandomFeature(TETile[][] world, int xPos, int yPos) {
         int type = RANDOM.nextInt(3);
-        switch (type) {
+        switch (2) {
             case 0:
                 WorldMaker.addVert(world, xPos, yPos);
                 break;
@@ -207,6 +254,13 @@ public class WorldMaker {
      // starter room
     public static void start(TETile[][] world) {
         WorldMaker.addRoom(world, 0, 0);
+        WorldMaker.checkmountain(world);
+        try {
+            WorldMaker.checkflower(world);
+        }
+        catch (IndexOutOfBoundsException e) {
+
+        }
 
     }
 

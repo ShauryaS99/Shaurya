@@ -46,6 +46,7 @@ public class Game {
             }
         }
         Long seed = Long.valueOf(input);
+        WorldMaker.RANDOM = new Random(seed);
         ter.initialize(WIDTH, HEIGHT);
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
         return finalWorldFrame;
