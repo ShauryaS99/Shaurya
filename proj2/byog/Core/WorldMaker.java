@@ -151,11 +151,11 @@ public class WorldMaker {
                     if (world[x - 1][y].equals(Tileset.SAND)) {
                         world[x][y + 1] = Tileset.WALL;
                         world[x][y - 1] = Tileset.WALL;
-                        WorldMaker.addRandomFeature(world, x + 1, y);
+                        WorldMaker.addRandomFeature(world, x + 1, y - 1);
                     } else if (world[x][y - 1].equals(Tileset.SAND)) {
                         world[x - 1][y] = Tileset.WALL;
                         world[x + 1][y] = Tileset.WALL;
-                        WorldMaker.addRandomFeature(world, x, y + 1);
+                        WorldMaker.addRandomFeature(world, x - 1, y + 1);
                     }
                 }
             }
@@ -206,7 +206,7 @@ public class WorldMaker {
     }
      // starter room
     public static void start(TETile[][] world) {
-        WorldMaker.addRoom(world,0, 0);
+        WorldMaker.addRoom(world, 0, 0);
 
     }
 
