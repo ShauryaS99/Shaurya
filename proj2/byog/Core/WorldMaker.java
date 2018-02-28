@@ -9,7 +9,7 @@ public class WorldMaker {
 
     private static final int WIDTH = 100;
     private static final int HEIGHT = 50;
-    protected static Random RANDOM = new Random(2);
+    protected static Random RANDOM = new Random();
 
     //makes vertical hall *GET MOUNTAINS TO OVERLAP
     public static void addVert(TETile[][] world, int xPos, int yPos) {
@@ -260,7 +260,7 @@ public class WorldMaker {
         //fillWithRandomFeatures(world);
 
         // draws the world to the screen
-        ter.renderFrame(world);
+        //ter.renderFrame(world);
     }
 
 }

@@ -35,17 +35,17 @@ public class Game {
         // Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-        input.toUpperCase();
-        for (int i = 0; i < input.length(); i++) {
-            char x = input.charAt(i);
+        String code = input.toUpperCase();
+        for (int i = 0; i < code.length(); i++) {
+            char x = code.charAt(i);
             if (x == 'N') {
-                input = input.replace("N", "");
+                code = code.replace("N", "");
             }
             if (x == 'S') {
-                input = input.replace("S", "");
+                code = code.replace("S", "");
             }
         }
-        Long seed = Long.valueOf(input);
+        Long seed = Long.valueOf(code);
         WorldMaker.RANDOM = new Random(seed);
         TETile[][] world = new TETile[WIDTH][HEIGHT];
         for (int x = 0; x < WIDTH; x += 1) {
