@@ -10,8 +10,8 @@ import java.util.Random;
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 70;
-    public static final int HEIGHT = 70;
+    public static final int WIDTH = 100;
+    public static final int HEIGHT = 50;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -47,9 +47,20 @@ public class Game {
         }
         Long seed = Long.valueOf(input);
         WorldMaker.RANDOM = new Random(seed);
-        ter.initialize(WIDTH, HEIGHT);
+        TETile[][] world = new TETile[WIDTH][HEIGHT];
+        for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < HEIGHT; y += 1) {
+                world[x][y] = Tileset.NOTHING;
+            }
+        }
+
+
+        WorldMaker.start(world);
+        return world;
+
+        /**ter.initialize(WIDTH, HEIGHT);
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
-        return finalWorldFrame;
+        return finalWorldFrame; */
 
 
 

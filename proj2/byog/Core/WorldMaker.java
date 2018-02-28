@@ -9,10 +9,7 @@ public class WorldMaker {
 
     private static final int WIDTH = 100;
     private static final int HEIGHT = 50;
-    //private static int xPos = 0;
-    //private static int yPos = 0;
-    protected static Random RANDOM = new Random(69);
-    private static int feature = 0;
+    protected static Random RANDOM = new Random(2);
 
     //makes vertical hall *GET MOUNTAINS TO OVERLAP
     public static void addVert(TETile[][] world, int xPos, int yPos) {
@@ -30,7 +27,6 @@ public class WorldMaker {
             }
             if (!(s == 0)) {
                 world[xPath][yPath] = Tileset.MOUNTAIN; //adds moutain
-                feature += 1;
             }
 
         }
@@ -60,11 +56,8 @@ public class WorldMaker {
             }
             if (!(s == 0)) {
                 world[xPath][yPath] = Tileset.MOUNTAIN; //adds mountain
-                feature += 1;
                 addtohall(world);
             }
-
-
         }
     }
 
@@ -93,8 +86,6 @@ public class WorldMaker {
                     }
                 }
                 WorldMaker.flower(world, botLX, botLY, wide, length);
-                feature += 1;
-
             }
         }
     }
@@ -161,40 +152,17 @@ public class WorldMaker {
         }
     }
 
-    public static void randomFeature(TETile[][] world) {
-        //int feature = RANDOM.nextInt(3);
-        int type = 2;
-        switch (type) {
-            case 0:
-                WorldMaker.addVert(world, RANDOM.nextInt(WIDTH - 2), RANDOM.nextInt(HEIGHT - 21));
-                break;
-            case 1:
-                WorldMaker.addHori(world, RANDOM.nextInt(WIDTH - 21), RANDOM.nextInt(HEIGHT - 2));
-                break;
-            case 2:
-                WorldMaker.addRoom(world, RANDOM.nextInt(WIDTH - 11), RANDOM.nextInt(HEIGHT - 11));
-                break;
-            default:
-                break;
-        }
-    }
 
-    public static void fillWithRandomFeatures(TETile[][] world) {
-
-        while (feature <= 40) {
-            randomFeature(world);
-        }
-    }
 
     public static void checkmountain(TETile[][] world) {
         for (int x = 1; x < WIDTH; x++) {
-            for (int y = 1; y < HEIGHT ; y++) {
+            for (int y = 1; y < HEIGHT; y++) {
                 if (world[x][y].equals(Tileset.MOUNTAIN)) {
                     if (x == WIDTH - 1 || y == HEIGHT - 1) {
                         world[x][y] = Tileset.WALL;
-                    } else {//check if you need to change if statements to else if statments!!
+                    } else  { //check if you need to change if statements to else if statments!!
                         if (world[x][y - 1].equals(Tileset.SAND)) {
-                            if (world[x][y + 1].equals(Tileset.WALL)) {//vert halls
+                            if (world[x][y + 1].equals(Tileset.WALL)) { //vert halls
                                 world[x][y + 1] = Tileset.FLOWER;
                                 world[x][y] = Tileset.SAND;
                             } else if (world[x][y + 1].equals(Tileset.SAND)) { //
@@ -208,7 +176,8 @@ public class WorldMaker {
                                 world[x][y] = Tileset.SAND;
                             }
                         }
-                        if (world[x][y + 1].equals(Tileset.NOTHING) || world[x + 1][y].equals(Tileset.NOTHING)) {
+                        if (world[x][y + 1].equals(Tileset.NOTHING)
+                                || world[x + 1][y].equals(Tileset.NOTHING)) {
                             world[x][y] = Tileset.WALL;
                         }
                     }
@@ -223,11 +192,13 @@ public class WorldMaker {
                 if (world[x][y].equals(Tileset.FLOWER)) {
                     if (x == WIDTH - 1 || y == HEIGHT - 1) {
                         world[x][y] = Tileset.WALL;
-                    } //checks sand on all sides
-                    else if (!(world[x + 1][y].equals(Tileset.SAND) || world[x][y + 1].equals(Tileset.SAND)
-                            || world[x - 1][y].equals(Tileset.SAND) || world[x][y - 1].equals(Tileset.SAND))
+                    } else if (!(world[x + 1][y].equals(Tileset.SAND)
+                            || world[x][y + 1].equals(Tileset.SAND)
+                            || world[x - 1][y].equals(Tileset.SAND)
+                            || world[x][y - 1].equals(Tileset.SAND))
                             || (world[x][y + 1].equals(Tileset.NOTHING))) {
                         world[x][y] = Tileset.WALL;
+                        //checks sand on all sides
                     }
                 }
             }
@@ -255,26 +226,9 @@ public class WorldMaker {
     public static void start(TETile[][] world) {
         WorldMaker.addRoom(world, 0, 0);
         WorldMaker.checkmountain(world);
-        try {
-            WorldMaker.checkflower(world);
-        }
-        catch (IndexOutOfBoundsException e) {
-
-        }
-
+        WorldMaker.checkflower(world);
     }
 
-
-
-
-    //public static void addCorner(TETile[][] world, int xPos, int yPos) {
-    //}
-
-    public static void overlap(TETile[][] world, int xpos, int ypos) {
-        //if (isEmpty(world, xpos, ypos)) {
-
-        //}
-    }
 
     //TRY TO GET MOUNTAINS TO OVERLAP
     public static boolean isEmpty(TETile[][] world, int xinit, int yinit, int xfin, int yfin) {
