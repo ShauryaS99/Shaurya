@@ -7,9 +7,10 @@ import java.util.Random;
 
 public class WorldMaker {
 
-    private static final int WIDTH = 100;
-    private static final int HEIGHT = 50;
+    private static final int WIDTH = Game.WIDTH;
+    private static final int HEIGHT = Game.HEIGHT - 5;
     protected static Random RANDOM = new Random();
+
 
     //makes vertical hall *GET MOUNTAINS TO OVERLAP
     public static void addVert(TETile[][] world, int xPos, int yPos) {
@@ -260,7 +261,7 @@ public class WorldMaker {
         //fillWithRandomFeatures(world);
 
         // draws the world to the screen
-        //ter.renderFrame(world);
+        ter.renderFrame(world);
     }
 
 }

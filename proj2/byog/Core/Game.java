@@ -12,6 +12,7 @@ public class Game {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 100;
     public static final int HEIGHT = 50;
+    public boolean active = false;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -56,14 +57,7 @@ public class Game {
 
 
         WorldMaker.start(world);
+        active = true;
         return world;
-
-        /**ter.initialize(WIDTH, HEIGHT);
-        TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
-        return finalWorldFrame; */
-
-
-
-
     }
 }
