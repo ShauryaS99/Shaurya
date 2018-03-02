@@ -260,7 +260,7 @@ public class WorldMaker {
         //fillWithRandomFeatures(world);
 
         // draws the world to the screen
-        //ter.renderFrame(world);
+        ter.renderFrame(world);
     }
 
 }
