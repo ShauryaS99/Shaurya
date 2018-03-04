@@ -22,21 +22,19 @@ public class Game {
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void initialize() {
-        StdDraw.clear();
-        StdDraw.clear(Color.BLACK);
-        StdDraw.setCanvasSize(WIDTH, HEIGHT);
-        Font font = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
+        Font font = new Font("Monaco", Font.BOLD, 45);
         StdDraw.setFont(font);
         StdDraw.setPenColor(Color.white);
         StdDraw.setXscale(0, WIDTH);
         StdDraw.setYscale(0, HEIGHT);
+        StdDraw.clear(Color.BLACK);
         StdDraw.text(midWidth, midHeight, "BallMaster 9000");
-        Font smallfont = new Font("Monaco", Font.BOLD, 30);
+        Font smallfont = new Font("Monaco", Font.PLAIN, 30);
         StdDraw.setFont(smallfont);
-        StdDraw.setPenColor(Color.white);
-        StdDraw.text(midWidth, midHeight - 5, "Young Blood");
-        //StdDraw.text(midWidth, midHeight - 2, "Old Blood");
-        //StdDraw.text(midWidth, midHeight - 3, "Ankles Broken");
+        StdDraw.text(midWidth, midHeight - 2, "New Game (N)");
+        StdDraw.text(midWidth, midHeight - 4, "Load Game (L)");
+        StdDraw.text(midWidth, midHeight - 6, "Quit (Q)");
     }
 
    /** public void display(String s) {
@@ -45,6 +43,29 @@ public class Game {
         StdDraw.line(0, Game.HEIGHT - 5, Game.WIDTH, Game.HEIGHT - 5);
         StdDraw.textLeft(1, Game.HEIGHT - 1, location());
     }*/
+
+    public void newgame() {
+        StdDraw.clear(Color.BLACK);
+        Font smallfont = new Font("Monaco", Font.PLAIN, 30);
+        StdDraw.setFont(smallfont);
+        StdDraw.setPenColor(Color.white);
+        StdDraw.text(midWidth, midHeight - 2, "Seed: ");
+        String input = "";
+        char key = ' ';
+        int x = 5;
+        while (key != 'S') {
+            if (!StdDraw.hasNextKeyTyped()) {
+                continue;
+            }
+            key = StdDraw.nextKeyTyped();
+            String keyString = String.valueOf(key);
+            input += String.valueOf(key);
+            StdDraw.text(midWidth + x, midHeight - 2, keyString);
+            x += 1;
+        }
+        input = 'N' + input;
+        playWithInputString(input);
+    }
 
     public String location(TETile[][] world) {
         int xPos = (int) StdDraw.mouseX();
@@ -61,10 +82,31 @@ public class Game {
         return Tileset.NOTHING.description();
     }
 
+    public TETile[][] giveworld() {
+        TETile[][] world = new TETile[WIDTH][HEIGHT];
+        for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < HEIGHT; y += 1) {
+                world[x][y] = Tileset.NOTHING;
+            }
+        }
+        return world;
+    }
     public void playWithKeyboard() {
         initialize();
-
-
+        char option = ' ';
+        while (option != 'N' && option != 'L' && option != 'Q' ) {
+            if (!StdDraw.hasNextKeyTyped()) {
+                continue;
+            }
+            option = StdDraw.nextKeyTyped();
+        }
+        if (option == 'N') {
+            newgame();
+        } else if (option == 'L') {
+            //loadgame();
+        } else if (option == 'Q'){
+            //quitgame
+        }
     }
 
     /**
@@ -94,18 +136,12 @@ public class Game {
             }
         }
         Long seed = Long.valueOf(code);
-        WorldMaker.RANDOM = new Random(seed);
-        TETile[][] world = new TETile[WIDTH][HEIGHT];
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
-            }
-        }
+        TETile[][] world = giveworld();
 
 
         WorldMaker.start(world);
+        ter.renderFrame(world);
         active  = true;
-        HUD.world = world;
         return world;
     }
 }

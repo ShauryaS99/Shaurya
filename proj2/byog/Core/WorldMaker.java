@@ -245,6 +245,7 @@ public class WorldMaker {
 
     public static void main(String[] args) {
         // initialize the tile rendering engine with a window of size WIDTH x HEIGHT
+       /** System.out.println("fix main");
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
 
@@ -256,13 +257,13 @@ public class WorldMaker {
             }
         }
 
-        HUD hud = new HUD();
+        //HUD hud = new HUD();
 
         start(world);
         //fillWithRandomFeatures(world);
 
         // draws the world to the screen
-        ter.renderFrame(world);
+        ter.renderFrame(world);*/
     }
 
 }
