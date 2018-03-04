@@ -5,19 +5,19 @@ import byog.TileEngine.Tileset;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
-import java.util.Random;
 
 public class HUD {
     int xPos = (int) StdDraw.mouseX();
     int yPos = (int) StdDraw.mouseY();
+    static TETile[][]world;
 
-    public void MemoryGame(int width, int height, long seed) {
-        /* Sets up StdDraw so that it has a width by height grid of 16 by 16 squares as its canvas
+
+    public void intialize(int width, int height) {
+        /* Sets up StdDraw
          * Also sets up the scale so the top left is (0,0) and the bottom right is (width, height)
          */
         width = Game.WIDTH;
         height = Game.HEIGHT;
-
         StdDraw.setCanvasSize(width,5 );
         Font font = new Font("Monaco", Font.BOLD, 30);
         StdDraw.setFont(font);
@@ -25,24 +25,25 @@ public class HUD {
         StdDraw.setYscale(0, height);
         StdDraw.clear(Color.BLACK);
         StdDraw.enableDoubleBuffering();
-
-        //Initialize random number generator
     }
 
     public String location(TETile[][] world) {
         if (world[xPos][yPos].equals(Tileset.SAND)) {
-            return "This is a hallway";
+            return Tileset.SAND.description();
         }
         if (world[xPos][yPos].equals(Tileset.GRASS)) {
-            return "This is a room";
+            return Tileset.GRASS.description();
         }
         if (world[xPos][yPos].equals(Tileset.FLOWER)) {
-            return "This is a Doorway";
+            return Tileset.FLOWER.description();
         }
-    return "This is nowhere";
+    return Tileset.NOTHING.description();
     }
 
     public void display(String s) {
-
+        Font smallFont = new Font("Monaco", Font.BOLD, 20);
+        StdDraw.setFont(smallFont);
+        StdDraw.line(0, Game.HEIGHT - 5, Game.WIDTH, Game.HEIGHT - 5);
+        StdDraw.textLeft(1, Game.HEIGHT - 1, location(world));
     }
 }

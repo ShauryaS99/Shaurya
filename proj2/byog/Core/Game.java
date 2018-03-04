@@ -3,7 +3,9 @@ package byog.Core;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
+import edu.princeton.cs.introcs.StdDraw;
 
+import java.awt.*;
 import java.util.Random;
 
 
@@ -13,11 +15,56 @@ public class Game {
     public static final int WIDTH = 100;
     public static final int HEIGHT = 50;
     public boolean active = false;
+    public static final int midWidth = WIDTH / 2;
+    public static final int midHeight = HEIGHT / 2;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
+    public void initialize() {
+        StdDraw.clear();
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setCanvasSize(WIDTH, HEIGHT);
+        Font font = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(Color.white);
+        StdDraw.setXscale(0, WIDTH);
+        StdDraw.setYscale(0, HEIGHT);
+        StdDraw.text(midWidth, midHeight, "BallMaster 9000");
+        Font smallfont = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setFont(smallfont);
+        StdDraw.setPenColor(Color.white);
+        StdDraw.text(midWidth, midHeight - 5, "Young Blood");
+        //StdDraw.text(midWidth, midHeight - 2, "Old Blood");
+        //StdDraw.text(midWidth, midHeight - 3, "Ankles Broken");
+    }
+
+   /** public void display(String s) {
+        Font smallFont = new Font("Monaco", Font.BOLD, 20);
+        StdDraw.setFont(smallFont);
+        StdDraw.line(0, Game.HEIGHT - 5, Game.WIDTH, Game.HEIGHT - 5);
+        StdDraw.textLeft(1, Game.HEIGHT - 1, location());
+    }*/
+
+    public String location(TETile[][] world) {
+        int xPos = (int) StdDraw.mouseX();
+        int yPos = (int) StdDraw.mouseY();
+        if (world[xPos][yPos].equals(Tileset.SAND)) {
+            return Tileset.SAND.description();
+        }
+        if (world[xPos][yPos].equals(Tileset.GRASS)) {
+            return Tileset.GRASS.description();
+        }
+        if (world[xPos][yPos].equals(Tileset.FLOWER)) {
+            return Tileset.FLOWER.description();
+        }
+        return Tileset.NOTHING.description();
+    }
+
     public void playWithKeyboard() {
+        initialize();
+
+
     }
 
     /**
@@ -57,7 +104,8 @@ public class Game {
 
 
         WorldMaker.start(world);
-        active = true;
+        active  = true;
+        HUD.world = world;
         return world;
     }
 }
