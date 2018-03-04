@@ -256,6 +256,7 @@ public class WorldMaker {
             }
         }
 
+        HUD hud = new HUD();
 
         start(world);
         //fillWithRandomFeatures(world);
