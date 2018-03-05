@@ -17,6 +17,7 @@ public class Game {
     public boolean active = false;
     public static final int midWidth = WIDTH / 2;
     public static final int midHeight = HEIGHT / 2;
+    public static TETile[][] world;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -37,12 +38,17 @@ public class Game {
         StdDraw.text(midWidth, midHeight - 6, "Quit (Q)");
     }
 
-   /** public void display(String s) {
+    public void display() {
+        StdDraw.clear();
+        ter.renderFrame(world);
+        StdDraw.enableDoubleBuffering();
         Font smallFont = new Font("Monaco", Font.BOLD, 20);
         StdDraw.setFont(smallFont);
-        StdDraw.line(0, Game.HEIGHT - 5, Game.WIDTH, Game.HEIGHT - 5);
-        StdDraw.textLeft(1, Game.HEIGHT - 1, location());
-    }*/
+        StdDraw.setPenColor(Color.white);
+        //StdDraw.line(0, Game.HEIGHT - 2, Game.WIDTH, Game.HEIGHT - 2);
+        StdDraw.textLeft(1, Game.HEIGHT - 1, location(world));
+        StdDraw.show();
+    }
 
     public void newgame() {
         StdDraw.clear(Color.BLACK);
@@ -58,6 +64,7 @@ public class Game {
                 continue;
             }
             key = StdDraw.nextKeyTyped();
+            key = Character.toUpperCase(key);
             String keyString = String.valueOf(key);
             input += String.valueOf(key);
             StdDraw.text(midWidth + x, midHeight - 2, keyString);
@@ -70,27 +77,21 @@ public class Game {
     public String location(TETile[][] world) {
         int xPos = (int) StdDraw.mouseX();
         int yPos = (int) StdDraw.mouseY();
-        if (world[xPos][yPos].equals(Tileset.SAND)) {
-            return Tileset.SAND.description();
+        if (xPos == WIDTH) {
+            xPos = WIDTH - 1;
         }
-        if (world[xPos][yPos].equals(Tileset.GRASS)) {
-            return Tileset.GRASS.description();
+        if (yPos == HEIGHT) {
+            yPos = HEIGHT - 1;
         }
-        if (world[xPos][yPos].equals(Tileset.FLOWER)) {
-            return Tileset.FLOWER.description();
+        if (world[xPos][yPos].equals(Tileset.FLOOR)) {
+            return Tileset.FLOOR.description();
+        }
+        if (world[xPos][yPos].equals(Tileset.WALL)) {
+            return Tileset.WALL.description();
         }
         return Tileset.NOTHING.description();
     }
 
-    public TETile[][] giveworld() {
-        TETile[][] world = new TETile[WIDTH][HEIGHT];
-        for (int x = 0; x < WIDTH; x += 1) {
-            for (int y = 0; y < HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
-            }
-        }
-        return world;
-    }
     public void playWithKeyboard() {
         initialize();
         char option = ' ';
@@ -99,6 +100,7 @@ public class Game {
                 continue;
             }
             option = StdDraw.nextKeyTyped();
+            option = Character.toUpperCase(option);
         }
         if (option == 'N') {
             newgame();
@@ -107,6 +109,25 @@ public class Game {
         } else if (option == 'Q'){
             //quitgame
         }
+
+        Player player = new Player(0,0);
+        player.create(world);
+        ter.renderFrame(world);
+
+        active  = true;
+        while (active) {
+            option = ' ';
+            while (option != 'W' && option != 'A' && option != 'S' && option != 'D') {
+                if (!StdDraw.hasNextKeyTyped()) {
+                    display();
+                    continue;
+                }
+                option = StdDraw.nextKeyTyped();
+                option = Character.toUpperCase(option);
+            }
+            player.moveinput(world, option);
+        }
+
     }
 
     /**
@@ -136,12 +157,19 @@ public class Game {
             }
         }
         Long seed = Long.valueOf(code);
-        TETile[][] world = giveworld();
 
+        ter.initialize(WIDTH, HEIGHT);
+        world = new TETile[WIDTH][HEIGHT];
+        for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < HEIGHT; y += 1) {
+                world[x][y] = Tileset.NOTHING;
+            }
+        }
 
+        WorldMaker.RANDOM = new Random(seed);
         WorldMaker.start(world);
+
         ter.renderFrame(world);
-        active  = true;
         return world;
     }
 }

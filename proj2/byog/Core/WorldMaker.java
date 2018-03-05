@@ -1,6 +1,6 @@
 package byog.Core;
 
-import byog.TileEngine.TERenderer;
+
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 import java.util.Random;
@@ -8,7 +8,7 @@ import java.util.Random;
 public class WorldMaker {
 
     private static final int WIDTH = Game.WIDTH;
-    private static final int HEIGHT = Game.HEIGHT - 5;
+    private static final int HEIGHT = Game.HEIGHT - 2;
     protected static Random RANDOM = new Random();
 
 
@@ -86,7 +86,7 @@ public class WorldMaker {
                         }
                     }
                 }
-                WorldMaker.flower(world, botLX, botLY, wide, length);
+                flower(world, botLX, botLY, wide, length);
             }
         }
     }
@@ -208,7 +208,7 @@ public class WorldMaker {
 
     // no more randy shit everywhere
     public static void addRandomFeature(TETile[][] world, int xPos, int yPos) {
-        int type = RANDOM.nextInt(3);
+        //int type = RANDOM.nextInt(3);
         switch (2) {
             case 0:
                 WorldMaker.addVert(world, xPos, yPos);
@@ -225,9 +225,33 @@ public class WorldMaker {
     }
      // starter room
     public static void start(TETile[][] world) {
-        WorldMaker.addRoom(world, 0, 0);
-        WorldMaker.checkmountain(world);
-        WorldMaker.checkflower(world);
+        addRoom(world, 0, 0);
+        checkmountain(world);
+        checkflower(world);
+        purge(world);
+    }
+
+    public static void purge(TETile[][] world) {
+        for (int x = 1; x < WIDTH; x++) {
+            for (int y = 1; y < HEIGHT; y++) {
+                if (!(world[x][y].equals(Tileset.NOTHING) || world[x][y].equals(Tileset.WALL))) {
+                    world[x][y] = Tileset.FLOOR;
+                    if (world[x + 1][y].equals(Tileset.NOTHING)) {
+                        world[x + 1][y] = Tileset.WALL;
+                    }
+                    if (world[x][y + 1].equals(Tileset.NOTHING)) {
+                        world[x][y + 1] = Tileset.WALL;
+                    }
+                    if (world[x - 1][y].equals(Tileset.NOTHING)) {
+                        world[x - 1][y] = Tileset.WALL;
+                    }
+                    if (world[x][y - 1].equals(Tileset.NOTHING)) {
+                        world[x][y - 1] = Tileset.WALL;
+                    }
+                }
+            }
+        }
+
     }
 
 
