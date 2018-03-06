@@ -1,23 +1,26 @@
 package byog.Core;
 
+import byog.SaveDemo.World;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.io.*;
 import java.util.Random;
 
 
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 100;
-    public static final int HEIGHT = 50;
+    public static final int WIDTH = 60;
+    public static final int HEIGHT = 40;
     public boolean active = false;
     public static final int midWidth = WIDTH / 2;
     public static final int midHeight = HEIGHT / 2;
     public static TETile[][] world;
+    public static Player p;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -74,6 +77,74 @@ public class Game {
         playWithInputString(input);
     }
 
+    private static void saveWorld(TETile[][] w, Player p) {
+        File f = new File("./game.txt");
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fs = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(w);
+            os.writeObject(p);
+            os.close();
+        }  catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(0);
+        }
+    }
+
+    private static Player loadPlayer() {
+        File f = new File("./player.txt");
+        if (f.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                Player loadPlayer = (Player) os.readObject();
+                os.close();
+                return loadPlayer;
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e);
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                System.out.println("class not found");
+                System.exit(0);
+            }
+        }
+        return new Player(0,0);
+    }
+
+    private static TETile[][] loadWorld() {
+        File f = new File("./game.txt");
+        if (f.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                TETile[][] loadWorld = (TETile[][]) os.readObject();
+                os.close();
+                return loadWorld;
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e);
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                System.out.println("class not found");
+                System.exit(0);
+            }
+        }
+
+        /* In the case no World has been saved yet, we return a new one. */
+        return world;
+    }
+
     public String location(TETile[][] world) {
         int xPos = (int) StdDraw.mouseX();
         int yPos = (int) StdDraw.mouseY();
@@ -102,12 +173,14 @@ public class Game {
             option = StdDraw.nextKeyTyped();
             option = Character.toUpperCase(option);
         }
+
         if (option == 'N') {
             newgame();
         } else if (option == 'L') {
-            //loadgame();
+            loadWorld();
+            loadPlayer();
         } else if (option == 'Q'){
-            //quitgame
+            System.exit(0);
         }
 
         Player player = new Player(0,0);
@@ -121,6 +194,11 @@ public class Game {
                 if (!StdDraw.hasNextKeyTyped()) {
                     display();
                     continue;
+                }
+                if (option == 'Q'){
+                    saveWorld(world, p);
+                    System.exit(0);
+                    break;
                 }
                 option = StdDraw.nextKeyTyped();
                 option = Character.toUpperCase(option);

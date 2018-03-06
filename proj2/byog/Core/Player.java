@@ -2,13 +2,16 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable{
 
     protected static Random RANDOM = new Random();
     public int xpos;
     public int ypos;
+    private static final long serialVersionUID = 3L;
+
 
     public Player(int xpos, int ypos) {
         this.xpos = xpos;
