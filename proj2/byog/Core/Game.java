@@ -19,7 +19,7 @@ public class Game {
     public boolean active = false;
     public static final int midWidth = WIDTH / 2;
     public static final int midHeight = HEIGHT / 2;
-    public static TETile[][] world;
+    public TETile[][] world;
     public static Player p;
 
     /**
@@ -117,7 +117,8 @@ public class Game {
                 System.exit(0);
             }
         }
-        return new Player(0,0);
+
+        return null;
     }
 
     private static TETile[][] loadWorld() {
@@ -142,7 +143,7 @@ public class Game {
         }
 
         /* In the case no World has been saved yet, we return a new one. */
-        return world;
+        return null;
     }
 
     public String location(TETile[][] world) {
@@ -174,8 +175,12 @@ public class Game {
             option = Character.toUpperCase(option);
         }
 
+        Player player = new Player(0,0);
+
+
         if (option == 'N') {
             newgame();
+            player.create(world);
         } else if (option == 'L') {
             loadWorld();
             loadPlayer();
@@ -183,8 +188,8 @@ public class Game {
             System.exit(0);
         }
 
-        Player player = new Player(0,0);
-        player.create(world);
+        //Player player = new Player(0,0);
+        //player.create(world);
         ter.renderFrame(world);
 
         active  = true;
@@ -243,9 +248,8 @@ public class Game {
                 world[x][y] = Tileset.NOTHING;
             }
         }
-
-        WorldMaker.RANDOM = new Random(seed);
-        WorldMaker.start(world);
+        WorldMaker dungeon = new WorldMaker(world, seed);
+        dungeon.start();
 
         ter.renderFrame(world);
         return world;

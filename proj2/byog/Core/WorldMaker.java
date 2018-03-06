@@ -13,6 +13,12 @@ public class WorldMaker implements Serializable{
     private static final int HEIGHT = Game.HEIGHT - 2;
     protected static Random RANDOM = new Random();
     private static final long serialVersionUID = 2L;
+    public TETile[][] world;
+
+    public WorldMaker(TETile[][]world, long seed) {
+        RANDOM = new Random(seed);
+        this.world = world;
+    }
 
 
     //makes vertical hall *GET MOUNTAINS TO OVERLAP
@@ -87,7 +93,7 @@ public class WorldMaker implements Serializable{
     public static void addRoom(TETile[][] world, int xPos, int yPos) {
         int botLX = xPos;
         int botLY = yPos;
-        int wide = WorldMaker.checkroomsize(WIDTH, botLX);
+        int wide = checkroomsize(WIDTH, botLX);
         int length = WorldMaker.checkroomsize(HEIGHT, botLY);
         if (!(wide == 0 || length == 0)) { //check if there is space in isEmpty for phase 2
             if (isEmpty(world, xPos, yPos, xPos + wide, yPos + length)) {
@@ -231,18 +237,18 @@ public class WorldMaker implements Serializable{
                 break;
             case 1:
             case 2:
-                WorldMaker.addRoom(world, xPos, yPos);
+                addRoom(world, xPos, yPos);
                 break;
             default:
                 break;
         }
     }
      // starter room
-    public static void start(TETile[][] world) {
-        addRoom(world, 0, 0);
-        checkmountain(world);
-        checkflower(world);
-        purge(world);
+    public void start() {
+        addRoom(this.world, 0, 0);
+        checkmountain(this.world);
+        checkflower(this.world);
+        purge(this.world);
     }
 
     public static void purge(TETile[][] world) {
