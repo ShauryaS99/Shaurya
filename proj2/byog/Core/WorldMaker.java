@@ -82,11 +82,21 @@ public class WorldMaker implements Serializable{
     }
 
     public static int checkroomsize(int dimension, int start) {
-        if (dimension -  start - 3 <= 0) {
+        if (dimension -  start - 5 <= 0) {
             return 0;
         }
-        return (RANDOM.nextInt(dimension - start - 3)) % 6 + 3; //size: 4 - 8
+        return (RANDOM.nextInt(dimension - start - 5)) % 6 + 5; //size: 5 - 8
         // makes sure there is space for room
+    }
+
+    public static void offsetroom(TETile[][] world, int xPos, int yPos, boolean horiz) {
+        int offset = RANDOM.nextInt(3) + 1; //offset from 1 - 3
+        if (horiz) {
+            addRoom(world, xPos - offset, yPos);
+        }
+        else {
+            addRoom(world, xPos, yPos - offset);
+        }
     }
 
     // makes room YA NEED TO FIGURE OUT HOW TO WORK WITH OPENINGS --> WE DID!!!!
@@ -94,7 +104,7 @@ public class WorldMaker implements Serializable{
         int botLX = xPos;
         int botLY = yPos;
         int wide = checkroomsize(WIDTH, botLX);
-        int length = WorldMaker.checkroomsize(HEIGHT, botLY);
+        int length = checkroomsize(HEIGHT, botLY);
         if (!(wide == 0 || length == 0)) { //check if there is space in isEmpty for phase 2
             if (isEmpty(world, xPos, yPos, xPos + wide, yPos + length)) {
                 for (int i = 0; i <= wide; i++) {
@@ -142,10 +152,12 @@ public class WorldMaker implements Serializable{
                     if (world[x + 1][y].equals(Tileset.WALL)
                             || world[x - 1][y].equals(Tileset.WALL)) {
                             //checks if we need vert hall
+                        int offset = RANDOM.nextInt(3) + 1; //offset from 1 - 3
                         WorldMaker.addVert(world, x - 1, y + 1);
                     } else if (world[x][y + 1].equals(Tileset.WALL)
                             || world[x][y - 1].equals(Tileset.WALL)) {
                         //checks if we need horiz hall
+                        int offset = RANDOM.nextInt(3) + 1; //offset from 1 - 3
                         WorldMaker.addHori(world, x + 1, y - 1);
                     }
                 }
@@ -237,7 +249,7 @@ public class WorldMaker implements Serializable{
                 break;
             case 1:
             case 2:
-                addRoom(world, xPos, yPos);
+                offsetroom(world, xPos, yPos, horiz);
                 break;
             default:
                 break;
