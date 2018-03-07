@@ -5,11 +5,11 @@ import byog.TileEngine.Tileset;
 import java.io.Serializable;
 import java.util.Random;
 
-public class Player implements Serializable{
+public class Player implements Serializable {
 
-    protected static Random RANDOM = new Random();
-    public int xpos;
-    public int ypos;
+    protected Random RANDOM = new Random();
+    private int xpos;
+    private int ypos;
     private static final long serialVersionUID = 3L;
 
 
@@ -47,18 +47,18 @@ public class Player implements Serializable{
                 break;
         }
     }
-    public boolean move(TETile[][] world, int xpos, int ypos) {
-        if (!(world[xpos][ypos].equals(Tileset.WALL))){
-            this.xpos = xpos;
-            this.ypos = ypos;
-            world[xpos][ypos] = Tileset.PLAYER;
+    public boolean move(TETile[][] world, int x, int y) {
+        if (!(world[x][y].equals(Tileset.WALL))) {
+            this.xpos = x;
+            this.ypos = y;
+            world[x][y] = Tileset.PLAYER;
             return true;
         }
         return false;
     }
     public void create(TETile[][] world) {
         boolean noplayer = true;
-        while(noplayer) {
+        while (noplayer) {
             xpos = RANDOM.nextInt(Game.WIDTH - 2) + 1;
             ypos = RANDOM.nextInt(Game.HEIGHT - 2) + 1;
             if (world[xpos][ypos].equals(Tileset.FLOOR)) { //checks for floor
