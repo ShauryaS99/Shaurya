@@ -281,7 +281,7 @@ public class Game {
         WorldMaker dungeon = new WorldMaker(world, randy);
         dungeon.start();
 
-        ter.renderFrame(world);
+        //ter.renderFrame(world);
         return world;
     }
 }
