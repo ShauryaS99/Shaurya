@@ -261,6 +261,7 @@ public class WorldMaker implements Serializable {
         checkmountain();
         checkflower();
         purge();
+        portals();
     }
 
     public  void purge() {
@@ -296,6 +297,19 @@ public class WorldMaker implements Serializable {
             }
         }
 
+    }
+
+    public void portals() {
+        int s = randy.nextInt(3) + 4; //random number of teleportation tiles 4 - 6
+        while (s > 0) {
+            int xpos = randy.nextInt(WIDTH - 2) + 1;
+            int ypos = randy.nextInt(HEIGHT - 2) + 1;
+            if (world[xpos][ypos].equals(Tileset.FLOOR)) {
+                world[xpos][ypos] = Tileset.WATER;
+                s--;
+            }
+
+        }
     }
 
 

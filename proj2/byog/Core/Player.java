@@ -50,6 +50,9 @@ public class Player implements Serializable {
     }
     public boolean move(TETile[][] world, int x, int y) {
         if (!(world[x][y].equals(Tileset.WALL))) {
+            if (world[x][y].equals(Tileset.WATER)) {
+
+            }
             this.xpos = x;
             this.ypos = y;
             world[x][y] = Tileset.PLAYER;

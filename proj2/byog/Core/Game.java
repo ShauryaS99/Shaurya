@@ -44,6 +44,7 @@ public class Game {
         StdDraw.text(MIDWIDTH, MIDHEIGHT - 2, "New Game (N)");
         StdDraw.text(MIDWIDTH, MIDHEIGHT - 4, "Load Game (L)");
         StdDraw.text(MIDWIDTH, MIDHEIGHT - 6, "Quit (Q)");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT - 10, "History (H)");
     }
 
     public void display() {
@@ -187,10 +188,34 @@ public class Game {
         return Tileset.NOTHING.description();
     }
 
+    public void history() {
+        StdDraw.clear(Color.BLACK);
+        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
+        Font font = new Font("Monaco", Font.BOLD, 35);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(Color.white);
+        StdDraw.setXscale(0, WIDTH);
+        StdDraw.setYscale(0, HEIGHT);
+        StdDraw.clear(Color.BLACK);
+        StdDraw.text(MIDWIDTH, HEIGHT - 5, "The Legend of the BallMaster");
+        Font smallfont = new Font("Monaco", Font.PLAIN, 20);
+        StdDraw.setFont(smallfont);
+        StdDraw.text(MIDWIDTH, MIDHEIGHT + 6, "First there was man, and then there was BallMaster. ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT + 4, "Initially, BallMaster was just a lowly street baller who ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT + 2, "couldn't even cross some young blood. ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT, "However, after years of training (watching Kuroko No Basuke) ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT - 2, "he finally unlocked the door to the Generation of Miracles. ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT - 4, "Once in, he quickly discovered the TRUE ZONE as part of his team - ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT - 6, "Fight Club. He would go on to lead his team to the playoffs after a ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT - 8, "rough 0-4 start to the season. His floor mates saw him as he ascended ");
+        StdDraw.text(MIDWIDTH, MIDHEIGHT - 10, "into greatness and ultimately obtained the status of ... BALLMASTER 9000!");
+        StdDraw.textRight(WIDTH - 5, 5, "Main Menu (M)");
+    }
+
     public void playWithKeyboard() {
         initialize();
         char option = ' ';
-        while (option != 'N' && option != 'L' && option != 'Q') {
+        while (option != 'N' && option != 'L' && option != 'Q' && option != 'H') {
             if (!StdDraw.hasNextKeyTyped()) {
                 continue;
             }
@@ -207,8 +232,18 @@ public class Game {
             p = loadPlayer();
         } else if (option == 'Q') {
             System.exit(0);
+        } else if (option == 'H') {
+            history();
+            char menu = ' ';
+            while (menu != 'M') {
+                if (!StdDraw.hasNextKeyTyped()) {
+                    continue;
+                }
+                menu = StdDraw.nextKeyTyped();
+                menu = Character.toUpperCase(menu);
+            }
+            playWithKeyboard();
         }
-
         //Player player = new Player(0,0);
         //player.create(world);
         ter.renderFrame(world);
@@ -274,7 +309,7 @@ public class Game {
                 for (; i < code.length(); i++) { //points char after s
                     inputs += code.charAt(i);
                 }
-                //ter.initialize(WIDTH, HEIGHT);
+                ter.initialize(WIDTH, HEIGHT);
                 world = loadWorld();
                 p = loadPlayer();
                 String move = inputs.toUpperCase();
@@ -292,12 +327,12 @@ public class Game {
                         }
                     }
                 }
-                //ter.renderFrame(world);
+                ter.renderFrame(world);
                 return world;
             }
         }
         Long seed = Long.valueOf(code);
-        //ter.initialize(WIDTH, HEIGHT);
+        ter.initialize(WIDTH, HEIGHT);
         world = new TETile[WIDTH][HEIGHT];
         for (int x = 0; x < WIDTH; x += 1) {
             for (int y = 0; y < HEIGHT; y += 1) {
@@ -328,7 +363,7 @@ public class Game {
             p = new Player(0, 0, randy);
             p.create(world);
         }
-        //ter.renderFrame(world);
+        ter.renderFrame(world);
         return world;
     }
 }
