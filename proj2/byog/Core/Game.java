@@ -27,6 +27,7 @@ public class Game {
     public static final int MIDHEIGHT = HEIGHT / 2;
     private TETile[][] world;
     private Player p;
+    private boolean movement = false;
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -202,8 +203,6 @@ public class Game {
 
         if (option == 'N') {
             newgame();
-            p = new Player(0, 0);
-            p.create(world);
         } else if (option == 'L') {
             ter.initialize(WIDTH, HEIGHT);
             world = loadWorld();
@@ -259,7 +258,7 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
         String code = input.toUpperCase();
-        String move = "";
+        String inputs = "";
         for (int i = 0; i < code.length(); i++) {
             char x = code.charAt(i);
             if (x == 'N') {
@@ -267,16 +266,40 @@ public class Game {
             }
             if (x == 'S') {
                 code = code.replace("S", "");
-                for (; i < code.length(); i ++) {
-                    i++; //points char after S
-                    move += code.charAt(i);
-
+                for (; i < code.length(); i++) {                     //points char after S
+                    inputs += code.charAt(i);
                 }
+                code = code.replace(inputs, "");
+            }
+            if (x == 'L') {
+                i++;
+                for (; i < code.length(); i++) { //points char after s
+                    inputs += code.charAt(i);
+                }
+                //ter.initialize(WIDTH, HEIGHT);
+                world = loadWorld();
+                p = loadPlayer();
+                String move = inputs.toUpperCase();
+                if (!(move.length() == 0)) {
+                    for (int k = 0; k < move.length(); k++) {
+                        char y = move.charAt(k);
+                        p.moveinput(world, y);
+                        if (y == ':') {
+                            if (move.charAt(k + 1) == 'Q') {
+                                saveWorld(world);
+                                savePlayer(p);
+                                break;
+                            }
+                            break;
+                        }
+                    }
+                }
+                //ter.renderFrame(world);
+                return world;
             }
         }
         Long seed = Long.valueOf(code);
-
-        ter.initialize(WIDTH, HEIGHT);
+        //ter.initialize(WIDTH, HEIGHT);
         world = new TETile[WIDTH][HEIGHT];
         for (int x = 0; x < WIDTH; x += 1) {
             for (int y = 0; y < HEIGHT; y += 1) {
@@ -286,8 +309,27 @@ public class Game {
         Random randy = new Random(seed);
         WorldMaker dungeon = new WorldMaker(world, randy);
         dungeon.start();
-
-        
+        String move = inputs.toUpperCase();
+        if (move.length() != 0) {
+            p = new Player(0, 0);
+            p.create(world);
+            for (int i = 0; i < move.length(); i++) {
+                char x = move.charAt(i);
+                p.moveinput(world, x);
+                if (x == ':') {
+                    if (move.charAt(i + 1) == 'Q') {
+                        saveWorld(world);
+                        savePlayer(p);
+                        System.out.println("world and player saved");
+                        break;
+                    }
+                    break;
+                }
+            }
+        } else {
+            p = new Player(0, 0);
+            p.create(world);
+        }
         //ter.renderFrame(world);
         return world;
     }

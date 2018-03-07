@@ -1,1 +1,3 @@
-Unlucky circumstances and schedules caused issues with being able to work on the project. Midterms for one partner on two consecutive days before project was due. Other partner had issues figuring out certain stuff the other partner had knowledge of. 
+We had many issues in phase 2 regarding static variables.
+We had many small errors with our saving and loading that took a lot of time to carefully track down and fix.
+We also had other exams to prepare for.
