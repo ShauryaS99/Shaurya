@@ -10,8 +10,8 @@ import java.util.Random;
 public class WorldMaker implements Serializable {
 
     private static final long serialVersionUID = 2L;
-    private static final int WIDTH = Game.WIDTH;
-    private static final int HEIGHT = Game.HEIGHT - 2;
+    static final int WIDTH = Game.WIDTH;
+    static final int HEIGHT = Game.HEIGHT - 2;
     protected Random randy;
     private TETile[][] world;
 
