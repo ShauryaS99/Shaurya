@@ -27,8 +27,6 @@ public class Game {
     public static final int MIDHEIGHT = HEIGHT / 2;
     private TETile[][] world;
     private Player p;
-    private boolean movement = false;
-
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
@@ -311,7 +309,7 @@ public class Game {
         dungeon.start();
         String move = inputs.toUpperCase();
         if (move.length() != 0) {
-            p = new Player(0, 0);
+            p = new Player(0, 0, randy);
             p.create(world);
             for (int i = 0; i < move.length(); i++) {
                 char x = move.charAt(i);
@@ -327,7 +325,7 @@ public class Game {
                 }
             }
         } else {
-            p = new Player(0, 0);
+            p = new Player(0, 0, randy);
             p.create(world);
         }
         //ter.renderFrame(world);

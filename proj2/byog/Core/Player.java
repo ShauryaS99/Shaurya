@@ -7,15 +7,16 @@ import java.util.Random;
 
 public class Player implements Serializable {
 
-    protected Random RANDOM = new Random();
     private int xpos;
     private int ypos;
     private static final long serialVersionUID = 3L;
+    protected Random randy;
 
 
-    public Player(int xpos, int ypos) {
+    public Player(int xpos, int ypos, Random randy) {
         this.xpos = xpos;
         this.ypos = ypos;
+        this.randy = randy;
     }
     public void moveinput(TETile[][] world, char option) {
         switch (option) {
@@ -59,8 +60,8 @@ public class Player implements Serializable {
     public void create(TETile[][] world) {
         boolean noplayer = true;
         while (noplayer) {
-            xpos = RANDOM.nextInt(Game.WIDTH - 2) + 1;
-            ypos = RANDOM.nextInt(Game.HEIGHT - 2) + 1;
+            xpos = randy.nextInt(Game.WIDTH - 2) + 1;
+            ypos = randy.nextInt(Game.HEIGHT - 2) + 1;
             if (world[xpos][ypos].equals(Tileset.FLOOR)) { //checks for floor
                 world[xpos][ypos] = Tileset.PLAYER;
                 noplayer = false;
