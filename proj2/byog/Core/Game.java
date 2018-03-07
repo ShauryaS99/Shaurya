@@ -259,6 +259,7 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
         String code = input.toUpperCase();
+        String move = "";
         for (int i = 0; i < code.length(); i++) {
             char x = code.charAt(i);
             if (x == 'N') {
@@ -266,6 +267,11 @@ public class Game {
             }
             if (x == 'S') {
                 code = code.replace("S", "");
+                for (; i < code.length(); i ++) {
+                    i++; //points char after S
+                    move += code.charAt(i);
+
+                }
             }
         }
         Long seed = Long.valueOf(code);
@@ -281,6 +287,7 @@ public class Game {
         WorldMaker dungeon = new WorldMaker(world, randy);
         dungeon.start();
 
+        
         //ter.renderFrame(world);
         return world;
     }
