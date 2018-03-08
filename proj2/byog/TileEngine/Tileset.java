@@ -40,7 +40,7 @@ public class Tileset {
     public static final TETile MOUNTAIN = new TETile('▲', Color.gray, Color.black, "mountain");
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
     public static final TETile Ball = new TETile('֍', Color.ORANGE, Color.black, "Ball - you pick up " +
-            "the ball, time to go James Harden on these fools ... (RIP Wesley Johnson 1987 - 2018");
+            "the ball, time to go James Harden on these fools ... (RIP Wesley Johnson 1987 - 2018)");
     public static final TETile Hoop = new TETile('℺', Color.red, Color.black, "Hoop - do you have ice " +
             "in your veins? Time to find out");
     public static final TETile Defender = new TETile('웃', Color.white, Color.black, "Defender - " +

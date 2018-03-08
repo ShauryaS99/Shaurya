@@ -122,7 +122,7 @@ public class Player implements Serializable {
     }
     public boolean move(TETile[][] world, int x, int y) {
         if (!(world[x][y].equals(Tileset.WALL))) {
-            this.xpos = x;
+            this.xpos = x;  
             this.ypos = y;
             if (world[x][y].equals(Tileset.WATER)) {
                 portal(world);

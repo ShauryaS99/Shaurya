@@ -20,7 +20,7 @@ import java.util.Random;
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 60;
+    public static final int WIDTH = 70;
     public static final int HEIGHT = 40;
     private boolean active = false;
     public static final int MIDWIDTH = WIDTH / 2;
@@ -179,13 +179,7 @@ public class Game {
         if (yPos == HEIGHT) {
             yPos = HEIGHT - 1;
         }
-        if (world[xPos][yPos].equals(Tileset.FLOOR)) {
-            return Tileset.FLOOR.description();
-        }
-        if (world[xPos][yPos].equals(Tileset.WALL)) {
-            return Tileset.WALL.description();
-        }
-        return Tileset.NOTHING.description();
+        return world[xPos][yPos].description();
     }
 
     public void history() {

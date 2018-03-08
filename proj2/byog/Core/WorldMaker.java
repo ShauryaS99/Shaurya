@@ -262,6 +262,8 @@ public class WorldMaker implements Serializable {
         checkflower();
         purge();
         portals();
+        ball();
+        hoop();
     }
 
     public  void purge() {
@@ -299,7 +301,29 @@ public class WorldMaker implements Serializable {
 
     }
 
-    
+    public void hoop() {
+        int basket = 1;
+        while (basket > 0) {
+            int xpos = randy.nextInt(WIDTH - 2) + 1;
+            int ypos = randy.nextInt(HEIGHT - 2) + 1;
+            if (world[xpos][ypos].equals(Tileset.FLOOR)) {
+                world[xpos][ypos] = Tileset.Hoop;
+                basket--;
+            }
+        }
+    }
+
+    public void ball() {
+        int bball = 1;
+        while (bball > 0) {
+            int xpos = randy.nextInt(WIDTH - 2) + 1;
+            int ypos = randy.nextInt(HEIGHT - 2) + 1;
+            if (world[xpos][ypos].equals(Tileset.FLOOR)) {
+                world[xpos][ypos] = Tileset.Ball;
+                bball--;
+            }
+        }
+    }
 
     public void portals() {
         int s = randy.nextInt(2) + 3; //random number of teleportation tiles 3 - 4
