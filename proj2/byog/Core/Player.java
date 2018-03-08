@@ -12,7 +12,7 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 3L;
     protected Random randy;
     private boolean lastmove;
-    private boolean bball = false;
+    private boolean hasbball = false;
     static int score = 0;
 
 
@@ -103,11 +103,24 @@ public class Player implements Serializable {
     }
 
     public void isBball() { //needs to update HUD
-        bball = true;
+        hasbball = true;
     }
 
-    public void hoop() {
-
+    public boolean isHoop(TETile[][] world) {
+        if (hasbball) {
+            score += 1;
+            if (score == 3) { //if you win
+                System.out.println("YOU WIN!!!!"); //change for HUD
+                System.exit(0);
+            }
+            makeball(world);
+            hasbball = false;
+            makehoop(world);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public boolean portal(TETile[][] world) {
@@ -115,8 +128,8 @@ public class Player implements Serializable {
             for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
                 if (i != this.xpos) {
                     if (world[i][j].equals(Tileset.WATER)) {
-                        int teleport = randy.nextInt(2);
-                        if (teleport == 1) {
+                        int teleport = randy.nextInt(3);
+                        if (teleport == 2) {
                             this.xpos = i;
                             this.ypos = j;
                             world[i][j] = Tileset.PLAYER;
@@ -132,6 +145,15 @@ public class Player implements Serializable {
     }
     public boolean move(TETile[][] world, int x, int y) {
         if (!(world[x][y].equals(Tileset.WALL))) {
+            if (world[x][y].equals(Tileset.Hoop)) {
+                boolean canhoop = isHoop(world);
+                if (canhoop) { //checks if you have the bball
+                    this.xpos = x; //sets your x,y pos
+                    this.ypos = y;
+                    world[x][y] = Tileset.PLAYER;
+                }
+                return canhoop;
+            }
             this.xpos = x;
             this.ypos = y;
             if (world[x][y].equals(Tileset.WATER)) {
@@ -140,9 +162,7 @@ public class Player implements Serializable {
             }
             else if (world[x][y].equals(Tileset.Ball)) {
                 isBball();
-            }
-            else if (world[x][y].equals(Tileset.Hoop)) {
-                hoop();
+                System.out.println(hasbball);
             }
             world[x][y] = Tileset.PLAYER;
             return true;
@@ -152,13 +172,39 @@ public class Player implements Serializable {
     public void create(TETile[][] world) {
         boolean noplayer = true;
         while (noplayer) {
-            xpos = randy.nextInt(Game.WIDTH - 2) + 1;
-            ypos = randy.nextInt(Game.HEIGHT - 2) + 1;
+            xpos = randy.nextInt(WorldMaker.WIDTH - 2) + 1;
+            ypos = randy.nextInt(WorldMaker.HEIGHT - 2) + 1;
             if (world[xpos][ypos].equals(Tileset.FLOOR)) { //checks for floor
                 world[xpos][ypos] = Tileset.PLAYER;
                 noplayer = false;
             }
         }
+        makehoop(world);
+        makeball(world);
 
+    }
+
+    public void makehoop(TETile[][] world) { //creates 1 hoop
+        int basket = 1;
+        while (basket > 0) {
+            int xpos = randy.nextInt(WorldMaker.WIDTH - 2) + 1;
+            int ypos = randy.nextInt(WorldMaker.HEIGHT - 2) + 1;
+            if (world[xpos][ypos].equals(Tileset.FLOOR)) {
+                world[xpos][ypos] = Tileset.Hoop;
+                basket--;
+            }
+        }
+    }
+
+    public void makeball(TETile[][] world) { //creates 1 basketball
+        int bball = 1;
+        while (bball > 0) {
+            int xpos = randy.nextInt(WorldMaker.WIDTH - 2) + 1;
+            int ypos = randy.nextInt(WorldMaker.HEIGHT - 2) + 1;
+            if (world[xpos][ypos].equals(Tileset.FLOOR)) {
+                world[xpos][ypos] = Tileset.Ball;
+                bball--;
+            }
+        }
     }
 }
