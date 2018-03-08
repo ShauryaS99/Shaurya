@@ -11,6 +11,7 @@ public class Player implements Serializable {
     private int ypos;
     private static final long serialVersionUID = 3L;
     protected Random randy;
+    private boolean lastmove;
 
 
     public Player(int xpos, int ypos, Random randy) {
@@ -19,123 +20,114 @@ public class Player implements Serializable {
         this.randy = randy;
     }
     public void moveinput(TETile[][] world, char option) {
+        boolean possiblemove;
         switch (option) {
             case 'W':
-                boolean doneExecuting = false;
-                boolean possiblemove = move(world, this.xpos, this.ypos + 1);
-                if (possiblemove) {
-                    if (world[this.xpos][this.ypos + 1].equals(Tileset.WATER)) {
-                        for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
-                            for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
-                                if (i != this.xpos) {
-                                    if (world[i][j].equals(Tileset.WATER)) {
-                                        this.xpos = i;
-                                        this.ypos = j;
-                                        world[i][j] = Tileset.PLAYER;
-                                        doneExecuting = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if(doneExecuting) {
-                                break;
-                            }
+                if (world[this.xpos][this.ypos + 1].equals(Tileset.WATER)) { //checks if player is moving to portal
+                    world[this.xpos][this.ypos] = Tileset.FLOOR;
+                    move(world, this.xpos, this.ypos + 1);
+                }
+                else {
+                    possiblemove = move(world, this.xpos, this.ypos + 1);
+                    if (possiblemove) {
+                        if (lastmove) { //checks if player is on portal
+                            world[this.xpos][this.ypos - 1] = Tileset.WATER; //replaces portal MOVES PORTAL FIX
+                            lastmove = false;
+                        } else {
+                            world[this.xpos][this.ypos - 1] = Tileset.FLOOR;
                         }
                     }
-                } else {
-                    world[this.xpos][this.ypos - 1] = Tileset.FLOOR;
                 }
+
+
                 break;
             case 'A':
-                boolean fuck = false;
-                possiblemove = move(world, this.xpos - 1, this.ypos);
-                if (possiblemove) {
-                    if (world[this.xpos - 1][this.ypos].equals(Tileset.WATER)) {
-                        for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
-                            for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
-                                if (i != this.xpos - 1) {
-                                    if (world[i][j].equals(Tileset.WATER)) {
-                                        this.xpos = i;
-                                        this.ypos = j;
-                                        world[i][j] = Tileset.PLAYER;
-                                        fuck = true;
-                                        break;
-
-                                    }
-                                }
-                            }
+                if (world[this.xpos - 1][this.ypos].equals(Tileset.WATER)) {
+                    world[this.xpos][this.ypos] = Tileset.FLOOR;
+                    move(world, this.xpos - 1, this.ypos);
+                }
+                else {
+                    possiblemove = move(world, this.xpos - 1, this.ypos);
+                    if (possiblemove) {
+                        if (lastmove) {
+                            world[this.xpos + 1][this.ypos] = Tileset.WATER;
+                            lastmove = false;
+                        } else {
+                            world[this.xpos + 1][this.ypos] = Tileset.FLOOR;
                         }
-                        if(fuck) {
-                            break;
-                        }
-                    }
-                    else {
-                        world[this.xpos + 1][this.ypos] = Tileset.FLOOR;
                     }
                 }
+
                 break;
             case 'S':
-                boolean shit = false;
-                possiblemove = move(world, this.xpos, this.ypos - 1);
-                if (possiblemove) {
-                    if (world[this.xpos][this.ypos - 1].equals(Tileset.WATER)) {
-                        for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
-                            for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
-                                if (i != this.xpos) {
-                                    if (world[i][j].equals(Tileset.WATER)) {
-                                        this.xpos = i;
-                                        this.ypos = j;
-                                        world[i][j] = Tileset.PLAYER;
-                                        shit = true;
-                                        break;
-                                    }
-                                }
-                            }
+                if (world[this.xpos][this.ypos - 1].equals(Tileset.WATER)) {
+                    world[this.xpos][this.ypos] = Tileset.FLOOR;
+                    move(world, this.xpos, this.ypos - 1);
+                }
+                else {
+                    possiblemove = move(world, this.xpos, this.ypos - 1);
+                    if (possiblemove) {
+                        if (lastmove) {
+                            world[this.xpos][this.ypos + 1] = Tileset.WATER;
+                            lastmove = false;
+                        } else {
+                            world[this.xpos][this.ypos + 1] = Tileset.FLOOR;
                         }
-                        if(shit) {
-                            break;
-                        }
-                    }
-                    else {
-                        world[this.xpos][this.ypos + 1] = Tileset.FLOOR;
                     }
                 }
+
                 break;
             case 'D':
-                boolean ass = false;
-                possiblemove = move(world, this.xpos + 1, this.ypos);
-                if (possiblemove) {
-                    if (world[this.xpos + 1][this.ypos].equals(Tileset.WATER)) {
-                        for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
-                            for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
-                                if (i != this.xpos + 1) {
-                                    if (world[i][j].equals(Tileset.WATER)) {
-                                        this.xpos = i;
-                                        this.ypos = j;
-                                        world[i][j] = Tileset.PLAYER;
-                                        ass = true;
-                                        break;
-                                    }
-                                }
-                            }
+                if (world[this.xpos + 1][this.ypos].equals(Tileset.WATER)) {
+                    world[this.xpos][this.ypos] = Tileset.FLOOR;
+                    move(world, this.xpos + 1, this.ypos);
+                }
+                else {
+                    possiblemove = move(world, this.xpos + 1, this.ypos);
+                    if (possiblemove) {
+                        if (lastmove) {
+                            world[this.xpos - 1][this.ypos] = Tileset.WATER;
+                            lastmove = false;
+                        } else {
+                            world[this.xpos - 1][this.ypos] = Tileset.FLOOR;
                         }
-                        if(ass) {
-                            break;
-                        }
-                    }
-                    else {
-                        world[this.xpos - 1][this.ypos] = Tileset.FLOOR;
                     }
                 }
+
                 break;
             default:
                 break;
         }
     }
+
+    public boolean portal(TETile[][] world) {
+        for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
+            for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
+                if (i != this.xpos) {
+                    if (world[i][j].equals(Tileset.WATER)) {
+                        int teleport = randy.nextInt(2);
+                        if (teleport == 1) {
+                            this.xpos = i;
+                            this.ypos = j;
+                            world[i][j] = Tileset.PLAYER;
+                            lastmove = true;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        portal(world);
+        return false;
+    }
     public boolean move(TETile[][] world, int x, int y) {
         if (!(world[x][y].equals(Tileset.WALL))) {
             this.xpos = x;
             this.ypos = y;
+            if (world[x][y].equals(Tileset.WATER)) {
+                portal(world);
+                return true;
+            }
             world[x][y] = Tileset.PLAYER;
             return true;
         }

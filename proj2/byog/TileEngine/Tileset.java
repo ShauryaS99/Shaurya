@@ -29,7 +29,8 @@ public class Tileset {
     public static final TETile NOTHING = new TETile(' ', Color.black, Color.black, "Nothing - " +
             "you are out of bounds young blood");
     public static final TETile GRASS = new TETile('"', Color.green, Color.black, "grass");
-    public static final TETile WATER = new TETile('≈', Color.blue, Color.black, "water");
+    public static final TETile WATER = new TETile('≈', Color.blue, Color.black, "Water - " +
+            "You unleash a devastating burst of power as you leap across the paint with your hopstep");
     public static final TETile FLOWER = new TETile('❀', Color.magenta, Color.pink, "flower");
     public static final TETile LOCKED_DOOR = new TETile('█', Color.orange, Color.black,
             "locked door");
@@ -38,6 +39,12 @@ public class Tileset {
     public static final TETile SAND = new TETile('▒', Color.yellow, Color.black, "sand");
     public static final TETile MOUNTAIN = new TETile('▲', Color.gray, Color.black, "mountain");
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
+    public static final TETile Ball = new TETile('֍', Color.ORANGE, Color.black, "Ball - you pick up " +
+            "the ball, time to go James Harden on these fools ... (RIP Wesley Johnson 1987 - 2018");
+    public static final TETile Hoop = new TETile('℺', Color.red, Color.black, "Hoop - do you have ice " +
+            "in your veins? Time to find out");
+    public static final TETile Defender = new TETile('웃', Color.white, Color.black, "Defender - " +
+            "put this young blood on skates");
 }
 
 
