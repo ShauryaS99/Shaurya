@@ -12,6 +12,8 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 3L;
     protected Random randy;
     private boolean lastmove;
+    private boolean bball = false;
+    static int score = 0;
 
 
     public Player(int xpos, int ypos, Random randy) {
@@ -100,6 +102,14 @@ public class Player implements Serializable {
         }
     }
 
+    public void isBball() { //needs to update HUD
+        bball = true;
+    }
+
+    public void hoop() {
+
+    }
+
     public boolean portal(TETile[][] world) {
         for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
             for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
@@ -122,11 +132,17 @@ public class Player implements Serializable {
     }
     public boolean move(TETile[][] world, int x, int y) {
         if (!(world[x][y].equals(Tileset.WALL))) {
-            this.xpos = x;  
+            this.xpos = x;
             this.ypos = y;
             if (world[x][y].equals(Tileset.WATER)) {
                 portal(world);
                 return true;
+            }
+            else if (world[x][y].equals(Tileset.Ball)) {
+                isBball();
+            }
+            else if (world[x][y].equals(Tileset.Hoop)) {
+                hoop();
             }
             world[x][y] = Tileset.PLAYER;
             return true;
