@@ -27,6 +27,7 @@ public class Game {
     public static final int MIDHEIGHT = HEIGHT / 2;
     private TETile[][] world;
     private Player p;
+    private Defender[] d;
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
@@ -51,11 +52,20 @@ public class Game {
         StdDraw.clear();
         ter.renderFrame(world);
         StdDraw.enableDoubleBuffering();
-        Font smallFont = new Font("Monaco", Font.BOLD, 20);
+        Font smallFont = new Font("Monaco", Font.BOLD, 15);
         StdDraw.setFont(smallFont);
         StdDraw.setPenColor(Color.white);
         //StdDraw.line(0, Game.HEIGHT - 2, Game.WIDTH, Game.HEIGHT - 2);
         StdDraw.textLeft(1, Game.HEIGHT - 1, location());
+        StdDraw.text(MIDWIDTH + 5, Game.HEIGHT - 1, "Score: " + p.score);
+        if (p.hasbball) {
+            StdDraw.textRight(Game.WIDTH - 1, Game.HEIGHT - 1, "BALL UP!");
+        }
+        else {
+            StdDraw.textRight(Game.WIDTH - 1, Game.HEIGHT - 1, "Get open");
+        }
+        Font regFont = new Font("Monaco", Font.BOLD, 20);
+        StdDraw.setFont(regFont);
         StdDraw.show();
     }
 
@@ -81,25 +91,6 @@ public class Game {
         }
         input = 'N' + input;
         playWithInputString(input);
-    }
-
-    private static void saveWorld(TETile[][] w) {
-        File f = new File("./game.txt");
-        try {
-            if (!f.exists()) {
-                f.createNewFile();
-            }
-            FileOutputStream fs = new FileOutputStream(f);
-            ObjectOutputStream os = new ObjectOutputStream(fs);
-            os.writeObject(w);
-            os.close();
-        }  catch (FileNotFoundException e) {
-            System.out.println("file not found");
-            System.exit(0);
-        } catch (IOException e) {
-            System.out.println(e);
-            System.exit(0);
-        }
     }
 
     private static void savePlayer(Player p) {
@@ -143,6 +134,68 @@ public class Game {
         }
 
         return null;
+    }
+
+    private static void saveDefender(Defender[] d) {
+        File f = new File("./defender.txt");
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fs = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(d);
+            os.close();
+        }  catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(0);
+        }
+    }
+
+    private static Defender[] loadDefender() {
+        File f = new File("./defender.txt");
+        if (f.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                Defender[] loadDefender = (Defender[]) os.readObject();
+                os.close();
+                return loadDefender;
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e);
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                System.out.println("class not found");
+                System.exit(0);
+            }
+        }
+
+        return null;
+    }
+
+    private static void saveWorld(TETile[][] w) {
+        File f = new File("./game.txt");
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fs = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(w);
+            os.close();
+        }  catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(0);
+        }
     }
 
     private static TETile[][] loadWorld() {
@@ -224,6 +277,7 @@ public class Game {
             ter.initialize(WIDTH, HEIGHT);
             world = loadWorld();
             p = loadPlayer();
+            d = loadDefender();
         } else if (option == 'Q') {
             System.exit(0);
         } else if (option == 'H') {
@@ -238,8 +292,6 @@ public class Game {
             }
             playWithKeyboard();
         }
-        //Player player = new Player(0,0);
-        //player.create(world);
         ter.renderFrame(world);
 
         active  = true;
@@ -254,6 +306,7 @@ public class Game {
                     if (StdDraw.nextKeyTyped() == 'Q') {
                         saveWorld(world);
                         savePlayer(p);
+                        saveDefender(d);
                         System.exit(0);
                         break;
                     }
@@ -264,6 +317,9 @@ public class Game {
                 option = Character.toUpperCase(option);
             }
             p.moveinput(world, option);
+            for (int q = 0; q < d.length; q++) {
+                d[q].moveinput(world, option);
+            }
         }
 
     }
@@ -306,15 +362,20 @@ public class Game {
                 ter.initialize(WIDTH, HEIGHT);
                 world = loadWorld();
                 p = loadPlayer();
+                d = loadDefender();
                 String move = inputs.toUpperCase();
                 if (!(move.length() == 0)) {
                     for (int k = 0; k < move.length(); k++) {
                         char y = move.charAt(k);
                         p.moveinput(world, y);
+                        for (int q = 0; q < d.length; q++) {
+                            d[q].moveinput(world, y);
+                        }
                         if (y == ':') {
                             if (move.charAt(k + 1) == 'Q') {
                                 saveWorld(world);
                                 savePlayer(p);
+                                saveDefender(d);
                                 break;
                             }
                             break;
@@ -338,24 +399,38 @@ public class Game {
         dungeon.start();
         String move = inputs.toUpperCase();
         if (move.length() != 0) {
-            p = new Player(0, 0, randy);
+            p = new Player(0, 0, randy, 0, false);
             p.create(world);
+            d = new Defender[5];
+            for (int q = 0; q < d.length; q++) {
+                d[q] = new Defender(0, 0, randy);
+                d[q].create(world);
+            }
             for (int i = 0; i < move.length(); i++) {
                 char x = move.charAt(i);
                 p.moveinput(world, x);
+                for (int q = 0; q < d.length; q++) {
+                    d[q].moveinput(world, x);
+                }
                 if (x == ':') {
                     if (move.charAt(i + 1) == 'Q') {
                         saveWorld(world);
                         savePlayer(p);
-                        System.out.println("world and player saved");
+                        saveDefender(d);
                         break;
                     }
                     break;
                 }
             }
         } else {
-            p = new Player(0, 0, randy);
+            p = new Player(0, 0, randy, 0, false);
             p.create(world);
+            d = new Defender[5];
+            for (int q = 0; q < d.length; q++) {
+                d[q] = new Defender(0, 0, randy);
+                d[q].create(world);
+            }
+
         }
         ter.renderFrame(world);
         return world;

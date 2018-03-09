@@ -1,26 +1,32 @@
 package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
+import edu.princeton.cs.introcs.StdDraw;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.Random;
 
-public class Player implements Serializable {
+public class Player extends Baller implements Serializable {
 
     private int xpos;
     private int ypos;
     private static final long serialVersionUID = 3L;
     protected Random randy;
     private boolean lastmove;
-    private boolean hasbball = false;
-    static int score = 0;
+    protected boolean hasbball;
+    protected int score;
 
 
-    public Player(int xpos, int ypos, Random randy) {
+    public Player(int xpos, int ypos, Random randy, int score, boolean hasbball) {
         this.xpos = xpos;
         this.ypos = ypos;
         this.randy = randy;
+        this.score = score;
+        this.hasbball = hasbball;
     }
+
+    @Override
     public void moveinput(TETile[][] world, char option) {
         boolean possiblemove;
         switch (option) {
@@ -110,8 +116,33 @@ public class Player implements Serializable {
         if (hasbball) {
             score += 1;
             if (score == 3) { //if you win
-                System.out.println("YOU WIN!!!!"); //change for HUD
-                System.exit(0);
+                char end = ' ';
+
+                    if (end != 'e') {
+                        StdDraw.clear(Color.BLACK);
+                        StdDraw.setCanvasSize(25 * 16, 25 * 16);
+                        Font font = new Font("Monaco", Font.BOLD, 35);
+                        StdDraw.setFont(font);
+                        StdDraw.setPenColor(Color.white);
+                        StdDraw.setXscale(0, Game.WIDTH);
+                        StdDraw.setYscale(0, Game.HEIGHT);
+                        StdDraw.clear(Color.BLACK);
+                        StdDraw.text(Game.MIDWIDTH, Game.HEIGHT - 5, "BALLMASTER > 9000");
+                        Font smallfont = new Font("Monaco", Font.PLAIN, 20);
+                        StdDraw.setFont(smallfont);
+                        StdDraw.text(Game.MIDWIDTH, Game.MIDHEIGHT + 6, "Nice moves, we'll bring out the body bags... ");
+                        StdDraw.show();
+                    }
+                    while (end != 'e') {
+                        if (!StdDraw.hasNextKeyTyped()) {
+                            continue;
+                        }
+                        end = StdDraw.nextKeyTyped();
+                        if (end == 'e') {
+                            System.exit(0);
+                        }
+                }
+
             }
             makeball(world);
             hasbball = false;
@@ -123,6 +154,7 @@ public class Player implements Serializable {
         }
     }
 
+    @Override
     public boolean portal(TETile[][] world) {
         for (int i = 0; i < WorldMaker.WIDTH - 1; i++) {
             for (int j = 0; j < WorldMaker.HEIGHT - 1; j++) {
@@ -143,6 +175,8 @@ public class Player implements Serializable {
         portal(world);
         return false;
     }
+
+    @Override
     public boolean move(TETile[][] world, int x, int y) {
         if (!(world[x][y].equals(Tileset.WALL))) {
             if (world[x][y].equals(Tileset.Hoop)) {
@@ -162,13 +196,14 @@ public class Player implements Serializable {
             }
             else if (world[x][y].equals(Tileset.Ball)) {
                 isBball();
-                System.out.println(hasbball);
             }
             world[x][y] = Tileset.PLAYER;
             return true;
         }
         return false;
     }
+
+    @Override
     public void create(TETile[][] world) {
         boolean noplayer = true;
         while (noplayer) {
@@ -189,9 +224,14 @@ public class Player implements Serializable {
         while (basket > 0) {
             int xpos = randy.nextInt(WorldMaker.WIDTH - 2) + 1;
             int ypos = randy.nextInt(WorldMaker.HEIGHT - 2) + 1;
-            if (world[xpos][ypos].equals(Tileset.FLOOR)) {
-                world[xpos][ypos] = Tileset.Hoop;
-                basket--;
+            if (world[xpos][ypos].equals(Tileset.FLOOR)
+                    && world[xpos - 1][ypos - 1].equals(Tileset.FLOOR)
+                    && world[xpos - 1][ypos + 1].equals(Tileset.FLOOR)
+                    && world[xpos + 1][ypos - 1].equals(Tileset.FLOOR)
+                    && world[xpos + 1][ypos + 1].equals(Tileset.FLOOR)) {
+                    world[xpos][ypos] = Tileset.Hoop;
+                    basket--;
+
             }
         }
     }
