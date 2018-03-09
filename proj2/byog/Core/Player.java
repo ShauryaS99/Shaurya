@@ -30,90 +30,100 @@ public class Player extends Baller implements Serializable {
 
     @Override
     public void moveinput(TETile[][] world, char option) {
-        boolean possiblemove;
-        switch (option) {
-            case 'W':
-                if (world[this.xpos][this.ypos + 1].equals(Tileset.WATER)) { //checks if player is moving to portal
-                    world[this.xpos][this.ypos] = Tileset.FLOOR;
-                    move(world, this.xpos, this.ypos + 1);
-                }
-                else {
-                    possiblemove = move(world, this.xpos, this.ypos + 1);
-                    if (possiblemove) {
-                        if (lastmove) { //checks if player is on portal
-                            world[this.xpos][this.ypos - 1] = Tileset.WATER; //replaces portal MOVES PORTAL FIX
-                            lastmove = false;
-                        } else {
-                            world[this.xpos][this.ypos - 1] = Tileset.FLOOR;
+        boolean lose = false;
+        if (!lose) {
+            boolean possiblemove;
+            switch (option) {
+                case 'W':
+                    if (world[this.xpos][this.ypos + 1].equals(Tileset.WATER)) { //checks if player is moving to portal
+                        world[this.xpos][this.ypos] = Tileset.FLOOR;
+                        move(world, this.xpos, this.ypos + 1);
+                    } else {
+                        possiblemove = move(world, this.xpos, this.ypos + 1);
+                        if (possiblemove) {
+                            if (lastmove) { //checks if player is on portal
+                                world[this.xpos][this.ypos - 1] = Tileset.WATER; //replaces portal MOVES PORTAL FIX
+                                lastmove = false;
+                            } else {
+                                world[this.xpos][this.ypos - 1] = Tileset.FLOOR;
+                            }
                         }
                     }
-                }
-
-
-                break;
-            case 'A':
-                if (world[this.xpos - 1][this.ypos].equals(Tileset.WATER)) {
-                    world[this.xpos][this.ypos] = Tileset.FLOOR;
-                    move(world, this.xpos - 1, this.ypos);
-                }
-                else {
-                    possiblemove = move(world, this.xpos - 1, this.ypos);
-                    if (possiblemove) {
-                        if (lastmove) {
-                            world[this.xpos + 1][this.ypos] = Tileset.WATER;
-                            lastmove = false;
-                        } else {
-                            world[this.xpos + 1][this.ypos] = Tileset.FLOOR;
+                    if (health <= 0) {
+                        lose = true;
+                        oneonone(world);
+                    }
+                    break;
+                case 'A':
+                    if (world[this.xpos - 1][this.ypos].equals(Tileset.WATER)) {
+                        world[this.xpos][this.ypos] = Tileset.FLOOR;
+                        move(world, this.xpos - 1, this.ypos);
+                    } else {
+                        possiblemove = move(world, this.xpos - 1, this.ypos);
+                        if (possiblemove) {
+                            if (lastmove) {
+                                world[this.xpos + 1][this.ypos] = Tileset.WATER;
+                                lastmove = false;
+                            } else {
+                                world[this.xpos + 1][this.ypos] = Tileset.FLOOR;
+                            }
                         }
                     }
-                }
-
-                break;
-            case 'S':
-                if (world[this.xpos][this.ypos - 1].equals(Tileset.WATER)) {
-                    world[this.xpos][this.ypos] = Tileset.FLOOR;
-                    move(world, this.xpos, this.ypos - 1);
-                }
-                else {
-                    possiblemove = move(world, this.xpos, this.ypos - 1);
-                    if (possiblemove) {
-                        if (lastmove) {
-                            world[this.xpos][this.ypos + 1] = Tileset.WATER;
-                            lastmove = false;
-                        } else {
-                            world[this.xpos][this.ypos + 1] = Tileset.FLOOR;
+                    if (health <= 0) {
+                        lose = true;
+                        oneonone(world);
+                    }
+                    break;
+                case 'S':
+                    if (world[this.xpos][this.ypos - 1].equals(Tileset.WATER)) {
+                        world[this.xpos][this.ypos] = Tileset.FLOOR;
+                        move(world, this.xpos, this.ypos - 1);
+                    } else {
+                        possiblemove = move(world, this.xpos, this.ypos - 1);
+                        if (possiblemove) {
+                            if (lastmove) {
+                                world[this.xpos][this.ypos + 1] = Tileset.WATER;
+                                lastmove = false;
+                            } else {
+                                world[this.xpos][this.ypos + 1] = Tileset.FLOOR;
+                            }
                         }
                     }
-                }
-
-                break;
-            case 'D':
-                if (world[this.xpos + 1][this.ypos].equals(Tileset.WATER)) {
-                    world[this.xpos][this.ypos] = Tileset.FLOOR;
-                    move(world, this.xpos + 1, this.ypos);
-                }
-                else {
-                    possiblemove = move(world, this.xpos + 1, this.ypos);
-                    if (possiblemove) {
-                        if (lastmove) {
-                            world[this.xpos - 1][this.ypos] = Tileset.WATER;
-                            lastmove = false;
-                        } else {
-                            world[this.xpos - 1][this.ypos] = Tileset.FLOOR;
+                    if (health <= 0) {
+                        lose = true;
+                        oneonone(world);
+                    }
+                    break;
+                case 'D':
+                    if (world[this.xpos + 1][this.ypos].equals(Tileset.WATER)) {
+                        world[this.xpos][this.ypos] = Tileset.FLOOR;
+                        move(world, this.xpos + 1, this.ypos);
+                    } else {
+                        possiblemove = move(world, this.xpos + 1, this.ypos);
+                        if (possiblemove) {
+                            if (lastmove) {
+                                world[this.xpos - 1][this.ypos] = Tileset.WATER;
+                                lastmove = false;
+                            } else {
+                                world[this.xpos - 1][this.ypos] = Tileset.FLOOR;
+                            }
                         }
                     }
-                }
-
-                break;
-            default:
-                break;
+                    if (health <= 0) {
+                        lose = true;
+                        oneonone(world);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
     public boolean oneonone(TETile[][] world) {
         if (!hasbball) {
             health -= 1;
-            if (health == 0) {
+            if (health <= 0) {
                 char end = ' ';
                 if (true) {
                     StdDraw.clear(Color.BLACK);
