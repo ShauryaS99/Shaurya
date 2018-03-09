@@ -9,21 +9,23 @@ import java.util.Random;
 
 public class Player extends Baller implements Serializable {
 
-    private int xpos;
-    private int ypos;
+    protected int xpos;
+    protected int ypos;
     private static final long serialVersionUID = 3L;
     protected Random randy;
     private boolean lastmove;
     protected boolean hasbball;
     protected int score;
+    protected int health;
 
 
-    public Player(int xpos, int ypos, Random randy, int score, boolean hasbball) {
+    public Player(int xpos, int ypos, Random randy, int score, boolean hasbball, int health) {
         this.xpos = xpos;
         this.ypos = ypos;
         this.randy = randy;
         this.score = score;
         this.hasbball = hasbball;
+        this.health = health;
     }
 
     @Override
@@ -108,6 +110,53 @@ public class Player extends Baller implements Serializable {
         }
     }
 
+    public boolean oneonone(TETile[][] world) {
+        if (!hasbball) {
+            health -= 1;
+            if (health == 0) {
+                char end = ' ';
+                if (true) {
+                    StdDraw.clear(Color.BLACK);
+                    StdDraw.setCanvasSize(25 * 16, 25 * 16);
+                    Font font = new Font("Monaco", Font.BOLD, 35);
+                    StdDraw.setFont(font);
+                    StdDraw.setPenColor(Color.white);
+                    StdDraw.setXscale(0, Game.WIDTH);
+                    StdDraw.setYscale(0, Game.HEIGHT);
+                    StdDraw.clear(Color.BLACK);
+                    StdDraw.text(Game.MIDWIDTH, Game.HEIGHT - 5, "GAME OVER");
+                    Font smallfont = new Font("Monaco", Font.PLAIN, 20);
+                    StdDraw.setFont(smallfont);
+                    StdDraw.text(Game.MIDWIDTH, Game.MIDHEIGHT + 6, "You got played SUCKAAAAAA ...  ");
+                    StdDraw.text(Game.MIDWIDTH, Game.MIDHEIGHT + 4, "You got " + score + " buckets");
+                    StdDraw.show();
+                }
+                while (end != 'E') {
+                    if (!StdDraw.hasNextKeyTyped()) {
+                        continue;
+                    }
+                    end = StdDraw.nextKeyTyped();
+                    end = Character.toUpperCase(end);
+                    if (end == 'E') {
+                        System.exit(0);
+                    }
+                }
+            }
+            world[this.xpos][this.ypos] = Tileset.FLOOR;
+            for (int i = 1; i < WorldMaker.WIDTH - 1; i++) {
+                for (int j = 1; j < WorldMaker.HEIGHT - 1; j++) {
+                    if (world[i][j].equals(Tileset.FLOOR)) {
+                        world[i][j] = Tileset.PLAYER;
+                        this.xpos = i;
+                        this.ypos = j;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public void isBball() { //needs to update HUD
         hasbball = true;
     }
@@ -118,7 +167,7 @@ public class Player extends Baller implements Serializable {
             if (score == 3) { //if you win
                 char end = ' ';
 
-                    if (end != 'e') {
+                    if (true) {
                         StdDraw.clear(Color.BLACK);
                         StdDraw.setCanvasSize(25 * 16, 25 * 16);
                         Font font = new Font("Monaco", Font.BOLD, 35);
@@ -133,12 +182,13 @@ public class Player extends Baller implements Serializable {
                         StdDraw.text(Game.MIDWIDTH, Game.MIDHEIGHT + 6, "Nice moves, we'll bring out the body bags... ");
                         StdDraw.show();
                     }
-                    while (end != 'e') {
+                    while (end != 'E') {
                         if (!StdDraw.hasNextKeyTyped()) {
                             continue;
                         }
                         end = StdDraw.nextKeyTyped();
-                        if (end == 'e') {
+                        end = Character.toUpperCase(end);
+                        if (end == 'E') {
                             System.exit(0);
                         }
                 }
@@ -188,20 +238,29 @@ public class Player extends Baller implements Serializable {
                 }
                 return canhoop;
             }
+
+            if (world[x][y].equals(Tileset.DEFENDER)) {
+                boolean loselife = oneonone(world);
+                if (loselife) {
+                    return false;
+                }
+            }
+
             this.xpos = x;
             this.ypos = y;
+
             if (world[x][y].equals(Tileset.WATER)) {
                 portal(world);
                 return true;
-            }
-            else if (world[x][y].equals(Tileset.Ball)) {
-                isBball();
+
+            } else if (world[x][y].equals(Tileset.Ball)) {
+                    isBball();
             }
             world[x][y] = Tileset.PLAYER;
             return true;
         }
         return false;
-    }
+        }
 
     @Override
     public void create(TETile[][] world) {

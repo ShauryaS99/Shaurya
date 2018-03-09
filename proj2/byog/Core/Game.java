@@ -5,6 +5,7 @@ import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 import edu.princeton.cs.introcs.StdDraw;
 
+import javax.swing.*;
 import java.awt.Font;
 import java.awt.Color;
 import java.io.File;
@@ -58,6 +59,15 @@ public class Game {
         //StdDraw.line(0, Game.HEIGHT - 2, Game.WIDTH, Game.HEIGHT - 2);
         StdDraw.textLeft(1, Game.HEIGHT - 1, location());
         StdDraw.text(MIDWIDTH + 5, Game.HEIGHT - 1, "Score: " + p.score);
+        StdDraw.text(MIDWIDTH + 15, Game.HEIGHT - 1, "Health: " + p.health);
+
+        int defamt = 9;
+        for (Defender i : d) {
+            if (i.crossed) {
+                defamt -= 1;
+            }
+        }
+        StdDraw.text(MIDWIDTH + 25, Game.HEIGHT - 1, "Defenders: " + defamt);
         if (p.hasbball) {
             StdDraw.textRight(Game.WIDTH - 1, Game.HEIGHT - 1, "BALL UP!");
         }
@@ -399,11 +409,11 @@ public class Game {
         dungeon.start();
         String move = inputs.toUpperCase();
         if (move.length() != 0) {
-            p = new Player(0, 0, randy, 0, false);
+            p = new Player(0, 0, randy, 0, false, 3);
             p.create(world);
-            d = new Defender[5];
+            d = new Defender[9];
             for (int q = 0; q < d.length; q++) {
-                d[q] = new Defender(0, 0, randy);
+                d[q] = new Defender(0, 0, randy, false, 9, p);
                 d[q].create(world);
             }
             for (int i = 0; i < move.length(); i++) {
@@ -423,11 +433,11 @@ public class Game {
                 }
             }
         } else {
-            p = new Player(0, 0, randy, 0, false);
+            p = new Player(0, 0, randy, 0, false, 3);
             p.create(world);
-            d = new Defender[5];
+            d = new Defender[9];
             for (int q = 0; q < d.length; q++) {
-                d[q] = new Defender(0, 0, randy);
+                d[q] = new Defender(0, 0, randy, false, 9, p);
                 d[q].create(world);
             }
 

@@ -300,7 +300,7 @@ public class WorldMaker implements Serializable {
     }
 
     public void portals() {
-        int s = randy.nextInt(2) + 3; //random number of teleportation tiles 3 - 4
+        int s = randy.nextInt(2) + 4; //random number of teleportation tiles 3 - 4
         while (s > 0) {
             int xpos = randy.nextInt(WIDTH - 2) + 1;
             int ypos = randy.nextInt(HEIGHT - 2) + 1;
