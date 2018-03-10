@@ -17,6 +17,7 @@ public class Player extends Baller implements Serializable {
     protected boolean hasbball;
     protected int score;
     protected int health;
+    protected int defenders = 9;
 
 
     public Player(int xpos, int ypos, Random randy, int score, boolean hasbball, int health) {
@@ -164,6 +165,7 @@ public class Player extends Baller implements Serializable {
                 }
             }
         }
+        defenders -= 1;
         return false;
     }
 
@@ -190,6 +192,7 @@ public class Player extends Baller implements Serializable {
                         Font smallfont = new Font("Monaco", Font.PLAIN, 20);
                         StdDraw.setFont(smallfont);
                         StdDraw.text(Game.MIDWIDTH, Game.MIDHEIGHT + 6, "Nice moves, we'll bring out the body bags... ");
+                        //StdDraw.text(Game.MIDWIDTH, Game.MIDHEIGHT + 4, "You crossed " + 9 - defenders +" defenders");
                         StdDraw.show();
                     }
                     while (end != 'E') {

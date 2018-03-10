@@ -17,7 +17,7 @@ import java.awt.Color;
  */
 
 public class Tileset {
-    public static final TETile PLAYER = new TETile('♔', Color.white, Color.black,
+    public static final TETile PLAYER = new TETile('♚', Color.black, Color.lightGray,
             "Player - you have but one goal in mind... the basket");
     public static final TETile WALL = new TETile('#', new Color(216, 128, 128), Color.darkGray,
             "Wall - you scream and one as you get blatantly fouled " +
@@ -42,7 +42,7 @@ public class Tileset {
             "the ball, time to go James Harden on these fools ... (RIP Wesley Johnson 1987 - 2018)");
     public static final TETile Hoop = new TETile('℺', Color.red, Color.black, "Hoop - do you have ice " +
             "in your veins? Time to find out");
-    public static final TETile DEFENDER = new TETile('웃', Color.white, Color.black, "Defender - " +
+    public static final TETile DEFENDER = new TETile('Ð', Color.white, Color.black, "Defender - " +
             "put this young blood on skates");
 }
 

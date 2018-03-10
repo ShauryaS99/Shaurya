@@ -109,7 +109,7 @@ public class Defender extends Baller implements Serializable{
     public void checkcrossed(TETile[][] world) {
         if (world[this.xpos][this.ypos].equals(Tileset.PLAYER)) {
             crossed = true;
-            this.xpos = defenders;
+            this.xpos = 1;
             this.ypos = 0;
             world[this.xpos][this.ypos] = Tileset.WALL;
             defenders -= 1;
@@ -153,12 +153,12 @@ public class Defender extends Baller implements Serializable{
                         p.ypos = j;
                         return false;
                     }
-                }
-            }
+    }
+}
         }
-            crossed = true;
+                crossed = true;
             world[this.xpos][this.ypos] = Tileset.FLOOR;
-            this.xpos = defenders;
+            this.xpos = 1;
             this.ypos = 0;
             defenders -= 1;
             world[this.xpos][this.ypos] = Tileset.WALL;
